@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu 01 - Trầm Tích Đới Bờ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen pb-10">
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg">
+        <div class="bg-blue-600 text-white p-4 flex items-center justify-between sticky top-0 z-10">
+            <a href="index.html" class="text-white hover:text-gray-200">← Quay lại</a>
+            <h1 class="text-lg font-bold">Phiếu 01</h1>
+            <div class="w-8"></div>
+        </div>
+
+        <div class="p-6">
+            <h2 class="text-xl font-bold text-center text-blue-700 mb-4">TRẦM TÍCH ĐỚI BỜ</h2>
+            
+            <form id="fieldForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700">Nhóm số:</label>
+                        <input type="text" id="nhom" required class="mt-1 w-full p-2 border rounded" placeholder="VD: Nhóm 1">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700">Người ghi:</label>
+                        <input type="text" id="nguoiGhi" required class="mt-1 w-full p-2 border rounded" placeholder="Họ tên">
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-3 rounded border">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tọa độ GPS:</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="gps" readonly class="flex-1 p-2 border rounded bg-gray-100 text-sm" placeholder="Nhấn nút lấy tọa độ...">
+                        <button type="button" onclick="getGPS()" class="bg-green-600 text-white px-3 py-2 rounded shadow hover:bg-green-700 text-sm">📍 Lấy</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Ghi chú phân đới (Kích thước hạt, độ mài tròn...):</label>
+                    <textarea id="noiDungKhaoSat" rows="4" required class="mt-1 w-full p-2 border rounded" placeholder="Ghi nhận dấu hiệu đới sóng vỗ, thềm đê cát..."></textarea>
+                </div>
+
+                <div class="bg-blue-50 p-3 rounded border border-blue-200">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">📸 Chụp ảnh phác họa / Mẫu vật:</label>
+                    <input type="file" id="imageInput" accept="image/*" capture="environment" class="w-full text-sm">
+                    <img id="imagePreview" class="mt-3 rounded hidden max-h-48 mx-auto" />
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-700 transition mt-6">
+                    🚀 Gửi Dữ Liệu Lên Hệ Thống
+                </button>
+                <p id="statusMsg" class="text-center text-sm font-semibold mt-2 hidden"></p>
+            </form>
+        </div>
+    </div>
+
+    <canvas id="canvas" style="display:none;"></canvas>
+
+    <script>
+        // !--- THAY LINK WEB APP CỦA BẠN VÀO ĐÂY ---!
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEpCJ5u9o-25Gz90VQU4BNUntIDvWyidn4ikGynGzvEsve8Yy95NY6bSU2c2rJzK8ivw/exec";
+
+        // 1. Hàm lấy GPS
+        function getGPS() {
+            const gpsInput = document.getElementById('gps');
+            gpsInput.value = "Đang lấy tọa độ...";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        gpsInput.value = `X:${position.coords.longitude.toFixed(5)}, Y:${position.coords.latitude.toFixed(5)}`;
+                    },
+                    error => {
+                        gpsInput.value = "Lỗi: Không thể lấy GPS";
+                        alert("Vui lòng cấp quyền định vị cho trình duyệt!");
+                    }
+                );
+            } else {
+                gpsInput.value = "Trình duyệt không hỗ trợ GPS.";
+            }
+        }
+
+        // 2. Hiển thị ảnh preview
+        let base64Image = "";
+        let imageMimeType = "";
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    // Nén ảnh bằng Canvas để tải lên mượt mà ngoài thực địa
+                    const canvas = document.getElementById('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    const MAX_WIDTH = 1000; // Giới hạn chiều rộng
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    // Lấy ảnh đã nén
+                    base64Image = canvas.toDataURL("image/jpeg", 0.7); // Nén chất lượng 70%
+                    imageMimeType = "image/jpeg";
+                    
+                    // Hiện ảnh preview
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = base64Image;
+                    preview.classList.remove('hidden');
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // 3. Gửi dữ liệu đi
+        document.getElementById('fieldForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            const status = document.getElementById('statusMsg');
+            
+            btn.disabled = true;
+            btn.innerText = "⏳ Đang gửi dữ liệu...";
+            status.classList.remove('hidden');
+            status.className = "text-center text-sm font-semibold mt-2 text-blue-600";
+            status.innerText = "Đang nén ảnh và tải lên Drive...";
+
+            const payload = {
+                action: "save_thudia_longhai",
+                phieuSo: "Phiếu 01: Trầm Tích Đới Bờ",
+                nhom: document.getElementById('nhom').value,
+                nguoiGhi: document.getElementById('nguoiGhi').value,
+                gps: document.getElementById('gps').value,
+                noiDungKhaoSat: document.getElementById('noiDungKhaoSat').value,
+                imageBase64: base64Image,
+                imageMimeType: imageMimeType,
+                imageName: "P01_Nhom_" + document.getElementById('nhom').value + "_" + new Date().getTime() + ".jpg"
+            };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Dùng no-cors cho Google Apps Script
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                btn.innerText = "✅ Gửi thành công!";
+                btn.classList.replace('bg-blue-600', 'bg-green-600');
+                status.className = "text-center text-sm font-semibold mt-2 text-green-600";
+                status.innerText = "Dữ liệu đã được lưu vào Google Sheet!";
+                
+                // Tự động reset form sau 3 giây
+                setTimeout(() => {
+                    document.getElementById('fieldForm').reset();
+                    document.getElementById('imagePreview').classList.add('hidden');
+                    base64Image = "";
+                    btn.disabled = false;
+                    btn.innerText = "🚀 Gửi Dữ Liệu Lên Hệ Thống";
+                    btn.classList.replace('bg-green-600', 'bg-blue-600');
+                    status.classList.add('hidden');
+                }, 3000);
+            }).catch(error => {
+                console.error('Error!', error.message);
+                btn.disabled = false;
+                btn.innerText = "❌ Lỗi, thử lại";
+                status.className = "text-center text-sm font-semibold mt-2 text-red-600";
+                status.innerText = "Vui lòng kiểm tra lại mạng Internet!";
+            });
+        });
+    </script>
+</body>
+</html>
