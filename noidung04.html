@@ -6,70 +6,166 @@
     <title>Phiếu 04 - Vỏ Phong Hóa Minh Đạm</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen pb-10">
-    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg">
-        <div class="bg-red-600 text-white p-4 flex items-center justify-between sticky top-0 z-10">
-            <a href="index.html" class="text-white hover:text-gray-200">← Quay lại</a>
-            <h1 class="text-lg font-bold">Phiếu 04</h1>
-            <div class="w-8"></div>
+<body class="bg-gray-200 min-h-screen pb-10">
+    <div class="max-w-lg mx-auto bg-white min-h-screen shadow-xl">
+        <div class="bg-red-600 text-white p-4 flex items-center justify-between sticky top-0 z-20 shadow-md">
+            <a href="index.html" class="text-white hover:text-gray-200 font-bold">← Quay lại</a>
+            <h1 class="text-lg font-bold uppercase tracking-wide">Phiếu 04</h1>
+            <div class="w-16"></div>
         </div>
 
-        <div class="p-6">
-            <h2 class="text-xl font-bold text-center text-red-700 mb-4">MẶT CẮT VỎ PHONG HÓA</h2>
+        <div class="p-5">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-red-800">MẶT CẮT VỎ PHONG HÓA & ĐÁ GỐC</h2>
+                <p class="text-sm text-gray-500 mt-1">Sườn núi Minh Đạm (13:00 - 14:30)</p>
+            </div>
             
-            <form id="fieldForm" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Nhóm số:</label>
-                        <input type="text" id="nhom" required class="mt-1 w-full p-2 border rounded" placeholder="VD: Nhóm 1">
+            <form id="fieldForm" class="space-y-6">
+                <div class="bg-red-50 p-4 rounded-lg border border-red-200 shadow-sm">
+                    <div class="grid grid-cols-1 gap-4 mb-3">
+                        <div>
+                            <label class="block text-xs font-bold text-red-800 uppercase mb-1">Chọn Nhóm của bạn:</label>
+                            <select id="nhom" required class="w-full p-2 border border-red-300 rounded text-sm focus:ring-2 focus:ring-red-500 font-bold text-red-700" onchange="updateStudents()">
+                                <option value="">-- Bấm để chọn nhóm --</option>
+                                <option value="Nhóm 1 - Cá Vàng">Nhóm 1 - Cá Vàng</option>
+                                <option value="Nhóm 2 - Trà Tam Hảo">Nhóm 2 - Trà Tam Hảo</option>
+                                <option value="Nhóm 3 - Trai Đẹp">Nhóm 3 - Trai Đẹp</option>
+                                <option value="Nhóm 4 - Phúc Lộc Thọ">Nhóm 4 - Phúc Lộc Thọ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-red-800 uppercase mb-1">Người ghi chép:</label>
+                            <select id="nguoiGhi" required class="w-full p-2 border border-red-300 rounded text-sm focus:ring-2 focus:ring-red-500 disabled:bg-gray-100" disabled>
+                                <option value="">-- Vui lòng chọn nhóm trước --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-xs font-bold text-red-800 uppercase mb-1">Tọa độ GPS:</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="gps" readonly class="flex-1 p-2 border border-red-300 rounded bg-white text-xs font-mono text-gray-600" placeholder="Chưa lấy tọa độ...">
+                            <button type="button" onclick="getGPS()" class="bg-red-600 text-white px-3 py-2 rounded shadow hover:bg-red-700 text-sm font-bold transition">📍 Lấy GPS</button>
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700">Người ghi:</label>
-                        <input type="text" id="nguoiGhi" required class="mt-1 w-full p-2 border rounded" placeholder="Họ tên">
+                        <label class="block text-xs font-bold text-red-800 uppercase mb-2">Độ dốc địa hình:</label>
+                        <div class="flex gap-4 text-sm">
+                            <label class="flex items-center gap-1 cursor-pointer"><input type="radio" name="doDoc" value="Thoải (<15°)" required class="text-red-600"> Thoải (&lt;15°)</label>
+                            <label class="flex items-center gap-1 cursor-pointer"><input type="radio" name="doDoc" value="Dốc TB (15-30°)" required class="text-red-600"> Dốc TB (15-30°)</label>
+                            <label class="flex items-center gap-1 cursor-pointer"><input type="radio" name="doDoc" value="Rất dốc (>30°)" required class="text-red-600"> Rất dốc (&gt;30°)</label>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-50 p-3 rounded border">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tọa độ GPS:</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="gps" readonly class="flex-1 p-2 border rounded bg-gray-100 text-sm">
-                        <button type="button" onclick="getGPS()" class="bg-red-600 text-white px-3 py-2 rounded shadow hover:bg-red-700 text-sm">📍 Lấy</button>
+                <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                    <div class="bg-gray-100 p-3 border-b border-gray-300">
+                        <h3 class="font-bold text-gray-800 text-sm">PHẦN 1: QUAN SÁT & ĐO ĐẠC MẶT CẮT VỎ PHONG HÓA</h3>
+                        <p class="text-xs text-gray-500 mt-1 italic">Dùng thước đo bề dày tương đối của các đới từ trên xuống.</p>
+                    </div>
+                    <div class="p-4 space-y-4">
+                        
+                        <div class="p-3 border border-red-200 bg-red-50 rounded">
+                            <p class="font-bold text-sm text-red-900">1. Đới Laterit (Đới kết vón sắt nhôm - Nếu có):</p>
+                            <p class="text-xs text-gray-700 mb-2">Sắt nhôm oxit kết vón cứng, màu đỏ nâu/xám xỉn.</p>
+                            <input type="text" id="doiLaterit" class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-red-500" placeholder="Bề dày (m) hoặc ghi 'Không có'...">
+                        </div>
+
+                        <div class="p-3 border border-yellow-200 bg-yellow-50 rounded">
+                            <p class="font-bold text-sm text-yellow-900">2. Đới Litoma (Đới sét - Sialit):</p>
+                            <p class="text-xs text-gray-700 mb-2">Sét mịn, màu loang lổ (trắng, vàng, hồng), bóp vỡ vụn dễ. Chủ yếu khoáng Kaolinit và Thạch anh sót.</p>
+                            <input type="text" id="doiLitoma" class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-yellow-500" placeholder="Bề dày (m)...">
+                        </div>
+
+                        <div class="p-3 border border-blue-200 bg-blue-50 rounded">
+                            <p class="font-bold text-sm text-blue-900">3. Đới Saprolit (Đới đá phong hóa dở dang):</p>
+                            <p class="text-xs text-gray-700 mb-2">Đá bị nứt nẻ mạnh, bở rời nhưng vẫn giữ nguyên vẹn kiến trúc và cấu tạo của đá mẹ ban đầu.</p>
+                            <input type="text" id="doiSaprolit" class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-blue-500" placeholder="Bề dày (m)...">
+                        </div>
+
+                        <div class="p-3 border border-gray-300 bg-gray-100 rounded">
+                            <p class="font-bold text-sm text-gray-900">4. Đá mẹ (Đá gốc - Bedrock):</p>
+                            <p class="text-xs text-gray-700 mb-2">Đá nguyên khối, cứng chắc.</p>
+                            <input type="text" id="daGoc" class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-gray-500" placeholder="Ghi nhận màu sắc, thành phần đá...">
+                        </div>
+
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700">1. Phân loại kiểu vỏ phong hóa:</label>
-                    <select id="kieuPhongHoa" class="mt-1 w-full p-2 border rounded text-sm">
-                        <option value="Sialit (Sét Kaolin, Thạch anh)">Sialit (Sét Kaolin, Thạch anh - Trên Granite)</option>
-                        <option value="Feralit / Alferit (Đất đỏ, Laterit)">Feralit / Alferit (Đất đỏ, Laterit - Trên Bazan)</option>
-                        <option value="Sialferit / Ferosialit">Sialferit / Ferosialit (Trung gian)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">2. Chiều dày các đới quan sát được:</label>
-                    <div class="space-y-2 text-sm">
-                        <input type="text" id="doi1" class="w-full p-2 border rounded" placeholder="Đới Laterit (có/không, dày bao nhiêu?)">
-                        <input type="text" id="doi2" class="w-full p-2 border rounded" placeholder="Đới Litoma (Sét màu sắc, bề dày?)">
-                        <input type="text" id="doi3" class="w-full p-2 border rounded" placeholder="Đới Saprolit (Đá phong hóa dở dang?)">
+                <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                    <div class="bg-gray-100 p-3 border-b border-gray-300">
+                        <h3 class="font-bold text-gray-800 text-sm">PHẦN 2: NHẬN DIỆN KHOÁNG VẬT (MICRO)</h3>
+                        <p class="text-xs text-gray-500 mt-1 italic">Dùng búa gõ vào đới Saprolit hoặc quan sát đới Litoma.</p>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <label class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer border border-transparent hover:border-gray-200 transition">
+                            <input type="checkbox" id="kvThachAnh" value="Có" class="mt-1 w-5 h-5 text-red-600 rounded">
+                            <span class="text-sm text-gray-700">
+                                <strong class="text-black">Thạch anh:</strong> Giữ nguyên hình dáng, màu trắng xám/trong suốt, cứng (Rất bền vững).
+                            </span>
+                        </label>
+                        <label class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer border border-transparent hover:border-gray-200 transition">
+                            <input type="checkbox" id="kvFenspat" value="Có" class="mt-1 w-5 h-5 text-red-600 rounded">
+                            <span class="text-sm text-gray-700">
+                                <strong class="text-black">Fenspat:</strong> Bị phong hóa triệt để thành khoáng sét (Kaolinit) màu trắng đục, mềm.
+                            </span>
+                        </label>
+                        <label class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer border border-transparent hover:border-gray-200 transition">
+                            <input type="checkbox" id="kvMica" value="Có" class="mt-1 w-5 h-5 text-red-600 rounded">
+                            <span class="text-sm text-gray-700">
+                                <strong class="text-black">Mica (Biotit):</strong> Chuyển sang màu vàng nâu (vảy rỉ sắt) hoặc mất màu.
+                            </span>
+                        </label>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700">3. Ý nghĩa tài nguyên khoáng sản:</label>
-                    <textarea id="taiNguyen" rows="3" required class="mt-1 w-full p-2 border rounded" placeholder="Có thể khai thác vật liệu xây dựng, gốm sứ hay kim loại?"></textarea>
+                <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                    <div class="bg-gray-100 p-3 border-b border-gray-300">
+                        <h3 class="font-bold text-gray-800 text-sm">PHẦN 3 & 4: KẾT LUẬN VÀ BẢN VẼ</h3>
+                    </div>
+                    <div class="p-4 space-y-5">
+                        
+                        <div>
+                            <p class="font-bold text-sm text-gray-800 mb-2">1. Phân loại kiểu vỏ phong hóa:</p>
+                            <p class="text-xs text-gray-600 mb-2">Với đá gốc là Granite và sản phẩm chủ yếu là sét màu sáng (Kaolinit) và thạch anh sót, vỏ phong hóa tại đây thuộc kiểu nào?</p>
+                            <div class="space-y-3">
+                                <label class="flex items-start gap-2 cursor-pointer">
+                                    <input type="radio" name="kieuPhongHoa" value="Sialit" required class="mt-1 text-red-600"> 
+                                    <span class="text-sm"><strong>Sialit:</strong> Chủ yếu là Si và Al (Sét Kaolin, thạch anh sót) - Phổ biến trên Granite.</span>
+                                </label>
+                                <label class="flex items-start gap-2 cursor-pointer">
+                                    <input type="radio" name="kieuPhongHoa" value="Feralit / Alferit" required class="mt-1 text-red-600"> 
+                                    <span class="text-sm"><strong>Feralit / Alferit:</strong> Chủ yếu là Fe và Al (Đất đỏ, laterit, bauxit) - Phổ biến trên Bazan.</span>
+                                </label>
+                                <label class="flex items-start gap-2 cursor-pointer">
+                                    <input type="radio" name="kieuPhongHoa" value="Sialferit / Ferosialit" required class="mt-1 text-red-600"> 
+                                    <span class="text-sm"><strong>Sialferit / Ferosialit:</strong> Trung gian.</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-sm text-gray-800 mb-2">2. Ý nghĩa tài nguyên khoáng sản:</p>
+                            <p class="text-xs text-gray-600 mb-2">Theo em, người ta có thể khai thác được loại khoáng sản gì? (Vật liệu xây dựng, gốm sứ, kim loại?)</p>
+                            <textarea id="taiNguyen" rows="3" required class="w-full p-2 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-red-500" placeholder="Trả lời..."></textarea>
+                        </div>
+
+                        <div class="bg-red-50 p-3 rounded border border-dashed border-red-400 text-center">
+                            <label class="block text-sm font-bold text-red-700 mb-2 cursor-pointer">
+                                📸 Chụp bản vẽ Phác họa mặt cắt (Ranh giới Đá gốc - Saprolit - Litoma - Laterit, có ghi bề dày)
+                                <input type="file" id="imageInput" accept="image/*" capture="environment" required class="hidden">
+                                <div class="mt-2 inline-block bg-white text-red-800 border border-red-300 px-4 py-2 rounded shadow-sm hover:bg-red-100 transition">
+                                    Bấm vào đây để mở Camera
+                                </div>
+                            </label>
+                            <img id="imagePreview" class="mt-3 rounded hidden max-h-48 mx-auto shadow-md border border-gray-200" />
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-red-50 p-3 rounded border border-red-200">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">📸 Chụp ảnh mặt cắt / Vẽ phác họa:</label>
-                    <input type="file" id="imageInput" accept="image/*" capture="environment" class="w-full text-sm">
-                    <img id="imagePreview" class="mt-3 rounded hidden max-h-48 mx-auto" />
-                </div>
-
-                <button type="submit" id="submitBtn" class="w-full bg-red-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-red-700 transition mt-6">
-                    🚀 Gửi Dữ Liệu Lên Hệ Thống
+                <button type="submit" id="submitBtn" class="w-full bg-red-600 text-white font-bold text-lg py-4 rounded-xl shadow-lg hover:bg-red-700 transition transform hover:-translate-y-1">
+                    🚀 GỬI PHIẾU KHẢO SÁT
                 </button>
-                <p id="statusMsg" class="text-center text-sm font-semibold mt-2 hidden"></p>
+                <p id="statusMsg" class="text-center text-sm font-bold mt-2 hidden"></p>
             </form>
         </div>
     </div>
@@ -77,18 +173,62 @@
     <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        // !!! THAY LINK CỦA BẠN VÀO ĐÂY !!!
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEpCJ5u9o-25Gz90VQU4BNUntIDvWyidn4ikGynGzvEsve8Yy95NY6bSU2c2rJzK8ivw/exec";
+        // LINK APP SCRIPT
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhzcVBWIZDFrx_a-HZNdQfVCOi_IYHok-nItZz2FTon2bkMMtI4g67BcQrA1JDI2jiGQ/exec";
 
+        // Dữ liệu danh sách lớp chia theo nhóm
+        const studentData = {
+            "Nhóm 1 - Cá Vàng": ["Lâm Yến Nhi (NT)", "Nguyễn Lê Thảo Tiên", "Phùng Thị Trúc Đào", "Trần Thị Như Hảo"],
+            "Nhóm 2 - Trà Tam Hảo": ["Nguyễn Thị Thanh Thảo (NT)", "Đỗ Nguyễn Xuân Thanh", "Lý Ngọc Tường Vân"],
+            "Nhóm 3 - Trai Đẹp": ["Vũ Đình Khoa (NT)", "Nguyễn Minh Chí", "Phạm Gia Phong", "Võ Trần Tiến Huy"],
+            "Nhóm 4 - Phúc Lộc Thọ": ["Dương Quỳnh Anh (NT)", "Nguyễn Hữu Hoàn", "Vũ Hoàng Anh Thư"]
+        };
+
+        // Cập nhật dropdown sinh viên khi chọn nhóm
+        function updateStudents() {
+            const nhomSelect = document.getElementById("nhom");
+            const nguoiGhiSelect = document.getElementById("nguoiGhi");
+            const selectedNhom = nhomSelect.value;
+
+            nguoiGhiSelect.innerHTML = ""; 
+
+            if (selectedNhom && studentData[selectedNhom]) {
+                nguoiGhiSelect.disabled = false;
+                let defaultOption = document.createElement("option");
+                defaultOption.text = "-- Chọn tên của bạn --";
+                defaultOption.value = "";
+                nguoiGhiSelect.add(defaultOption);
+
+                studentData[selectedNhom].forEach(name => {
+                    let option = document.createElement("option");
+                    option.text = name;
+                    option.value = name;
+                    nguoiGhiSelect.add(option);
+                });
+            } else {
+                nguoiGhiSelect.disabled = true;
+                let option = document.createElement("option");
+                option.text = "-- Vui lòng chọn nhóm trước --";
+                nguoiGhiSelect.add(option);
+            }
+        }
+
+        // Lấy GPS
         function getGPS() {
             const gpsInput = document.getElementById('gps');
             gpsInput.value = "Đang lấy...";
-            navigator.geolocation ? navigator.geolocation.getCurrentPosition(
-                pos => gpsInput.value = `X:${pos.coords.longitude.toFixed(5)}, Y:${pos.coords.latitude.toFixed(5)}`,
-                err => { gpsInput.value = "Lỗi GPS"; alert("Vui lòng bật GPS!"); }
-            ) : gpsInput.value = "Không hỗ trợ";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => gpsInput.value = `X:${pos.coords.longitude.toFixed(5)}, Y:${pos.coords.latitude.toFixed(5)}`,
+                    err => { gpsInput.value = "Lỗi GPS"; alert("Vui lòng cấp quyền định vị!"); },
+                    { enableHighAccuracy: true, timeout: 10000 }
+                );
+            } else {
+                gpsInput.value = "Không hỗ trợ GPS";
+            }
         }
 
+        // Xử lý nén và preview ảnh
         let base64Image = "", imageMimeType = "";
         document.getElementById('imageInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -99,32 +239,47 @@
                 img.onload = function() {
                     const canvas = document.getElementById('canvas');
                     const ctx = canvas.getContext('2d');
-                    const scaleSize = 1000 / img.width;
-                    canvas.width = 1000; canvas.height = img.height * scaleSize;
+                    const MAX_WIDTH = 1200; 
+                    let scaleSize = 1;
+                    if (img.width > MAX_WIDTH) { scaleSize = MAX_WIDTH / img.width; }
+                    canvas.width = img.width * scaleSize; 
+                    canvas.height = img.height * scaleSize;
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
                     base64Image = canvas.toDataURL("image/jpeg", 0.7);
                     imageMimeType = "image/jpeg";
-                    document.getElementById('imagePreview').src = base64Image;
-                    document.getElementById('imagePreview').classList.remove('hidden');
+                    
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = base64Image;
+                    preview.classList.remove('hidden');
                 };
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
         });
 
+        // Gửi Form
         document.getElementById('fieldForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn'), status = document.getElementById('statusMsg');
-            btn.disabled = true; btn.innerText = "⏳ Đang gửi...";
-            status.classList.remove('hidden'); status.className = "text-center text-sm font-semibold mt-2 text-red-600";
-            status.innerText = "Đang nén ảnh và lưu...";
+            
+            const btn = document.getElementById('submitBtn');
+            const status = document.getElementById('statusMsg');
+            btn.disabled = true; btn.innerText = "⏳ ĐANG XỬ LÝ VÀ GỬI...";
+            status.classList.remove('hidden'); status.className = "text-center text-sm font-bold mt-2 text-red-600";
+            status.innerText = "Hệ thống đang nén ảnh và tải lên Drive. Vui lòng đợi...";
 
+            const getRadioVal = (name) => {
+                const el = document.querySelector(`input[name="${name}"]:checked`);
+                return el ? el.value : "Chưa xác định";
+            };
+            const checkVal = (id) => document.getElementById(id).checked ? "Có" : "Không";
+
+            // Gom toàn bộ nội dung
             const noiDungTongHop = 
-                `- Kiểu phong hóa: ${document.getElementById('kieuPhongHoa').value}\n` +
-                `- Đới Laterit: ${document.getElementById('doi1').value}\n` +
-                `- Đới Litoma: ${document.getElementById('doi2').value}\n` +
-                `- Đới Saprolit: ${document.getElementById('doi3').value}\n` +
-                `- Ý nghĩa tài nguyên: ${document.getElementById('taiNguyen').value}`;
+                `[ĐỘ DỐC]: ${getRadioVal("doDoc")}\n` +
+                `[PHẦN 1 - MẶT CẮT]: Laterit: ${document.getElementById("doiLaterit").value || "---"} | Litoma: ${document.getElementById("doiLitoma").value || "---"} | Saprolit: ${document.getElementById("doiSaprolit").value || "---"} | Đá gốc: ${document.getElementById("daGoc").value || "---"}\n` +
+                `[PHẦN 2 - KHOÁNG VẬT]: Thạch anh: ${checkVal("kvThachAnh")} | Fenspat: ${checkVal("kvFenspat")} | Mica: ${checkVal("kvMica")}\n` +
+                `[PHẦN 4 - KẾT LUẬN]: Kiểu vỏ: ${getRadioVal("kieuPhongHoa")} | Tài nguyên: ${document.getElementById("taiNguyen").value}`;
 
             const payload = {
                 action: "save_thudia_longhai",
@@ -135,21 +290,35 @@
                 noiDungKhaoSat: noiDungTongHop,
                 imageBase64: base64Image,
                 imageMimeType: imageMimeType,
-                imageName: "P04_Nhom_" + document.getElementById('nhom').value + "_" + new Date().getTime() + ".jpg"
+                imageName: "P04_" + document.getElementById('nhom').value.substring(0,6).replace(" ", "") + "_" + new Date().getTime() + ".jpg"
             };
 
-            fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) })
-            .then(() => {
-                btn.innerText = "✅ Gửi thành công!";
-                status.innerText = "Dữ liệu đã vào Sheet!";
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                btn.innerText = "✅ THÀNH CÔNG!";
+                btn.classList.replace('bg-red-600', 'bg-green-600');
+                status.className = "text-center text-sm font-bold mt-2 text-green-600";
+                status.innerText = "Dữ liệu đã được nạp an toàn vào hệ thống!";
+                
                 setTimeout(() => {
                     document.getElementById('fieldForm').reset();
                     document.getElementById('imagePreview').classList.add('hidden');
-                    base64Image = ""; btn.disabled = false; btn.innerText = "🚀 Gửi Dữ Liệu Lên Hệ Thống"; status.classList.add('hidden');
-                }, 3000);
-            }).catch(err => {
-                btn.disabled = false; btn.innerText = "❌ Lỗi, thử lại";
-                status.className = "text-center text-sm font-semibold mt-2 text-red-600"; status.innerText = "Lỗi mạng!";
+                    document.getElementById('nguoiGhi').innerHTML = '<option value="">-- Vui lòng chọn nhóm trước --</option>';
+                    document.getElementById('nguoiGhi').disabled = true;
+                    base64Image = ""; btn.disabled = false; 
+                    btn.innerText = "🚀 GỬI PHIẾU KHẢO SÁT";
+                    btn.classList.replace('bg-green-600', 'bg-red-600');
+                    status.classList.add('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 3500);
+            }).catch(error => {
+                btn.disabled = false; btn.innerText = "❌ LỖI MẠNG, THỬ LẠI";
+                status.className = "text-center text-sm font-bold mt-2 text-red-600";
+                status.innerText = "Vui lòng kiểm tra sóng 4G và bấm Gửi lại!";
             });
         });
     </script>
