@@ -18,14 +18,25 @@
             <p class="text-sm text-gray-600 mb-4 text-center">Phần đánh giá kỹ năng độc lập của từng sinh viên. Bắt buộc thực hiện.</p>
             
             <form id="individualForm" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">MSSV:</label>
-                        <input type="text" id="mssv" required class="mt-1 w-full p-2 border rounded border-purple-300" placeholder="VD: 23160001">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Họ và Tên:</label>
-                        <input type="text" id="hoTen" required class="mt-1 w-full p-2 border rounded border-purple-300" placeholder="Tên SV">
+                
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-200 shadow-sm">
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-semibold text-purple-800">Chọn Nhóm của bạn:</label>
+                            <select id="nhom" required class="mt-1 w-full p-2 border border-purple-300 rounded font-bold text-purple-700 focus:ring-2 focus:ring-purple-500" onchange="updateStudents()">
+                                <option value="">-- Bấm để chọn nhóm --</option>
+                                <option value="Nhóm 1 - Cá Vàng">Nhóm 1 - Cá Vàng</option>
+                                <option value="Nhóm 2 - Trà Tam Hảo">Nhóm 2 - Trà Tam Hảo</option>
+                                <option value="Nhóm 3 - Trai Đẹp">Nhóm 3 - Trai Đẹp</option>
+                                <option value="Nhóm 4 - Phúc Lộc Thọ">Nhóm 4 - Phúc Lộc Thọ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-purple-800">Người nộp bài (MSSV & Tên):</label>
+                            <select id="nguoiGhi" required class="mt-1 w-full p-2 border border-purple-300 rounded focus:ring-2 focus:ring-purple-500 disabled:bg-gray-100 text-sm" disabled>
+                                <option value="">-- Vui lòng chọn nhóm trước --</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -39,24 +50,24 @@
                     </select>
                 </div>
 
-                <div id="promptBox" class="bg-purple-50 p-3 rounded border border-purple-200 text-sm text-gray-800">
+                <div id="promptBox" class="bg-white p-3 rounded border border-purple-200 text-sm text-gray-800 shadow-inner">
                     <strong class="text-purple-700">Yêu cầu ND1: Săn tìm vật liệu lạ.</strong><br>
                     Hãy tìm 1 hạt trầm tích/vỏ sò độc đáo nhất. Mô tả đặc điểm (màu, mài tròn) và dự đoán nguồn gốc của nó?
                 </div>
 
                 <div>
                     <label class="block text-sm font-semibold text-gray-700">Ghi chú / Kết quả cá nhân của bạn:</label>
-                    <textarea id="cauTraLoi" rows="4" required class="mt-1 w-full p-2 border rounded" placeholder="Nhập câu trả lời/số liệu của bạn vào đây..."></textarea>
+                    <textarea id="cauTraLoi" rows="4" required class="mt-1 w-full p-3 border border-purple-300 rounded focus:ring-2 focus:ring-purple-500" placeholder="Nhập câu trả lời/số liệu của bạn vào đây..."></textarea>
                 </div>
 
                 <div class="bg-gray-50 p-3 rounded border">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">📸 Chụp ảnh minh chứng cá nhân:</label>
                     <input type="file" id="imageInput" accept="image/*" capture="environment" required class="w-full text-sm">
-                    <img id="imagePreview" class="mt-3 rounded hidden max-h-48 mx-auto" />
+                    <img id="imagePreview" class="mt-3 rounded hidden max-h-48 mx-auto shadow" />
                 </div>
 
                 <button type="submit" id="submitBtn" class="w-full bg-purple-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-purple-700 transition mt-6">
-                    📤 Gửi Bài Cá Nhân
+                    📤 Nộp Bài Thu Hoạch Cá Nhân
                 </button>
                 <p id="statusMsg" class="text-center text-sm font-semibold mt-2 hidden"></p>
             </form>
@@ -66,7 +77,63 @@
     <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhzcVBWIZDFrx_a-HZNdQfVCOi_IYHok-nItZz2FTon2bkMMtI4g67BcQrA1JDI2jiGQ/exec"; // THAY BẰNG LINK APP SCRIPT CỦA THẦY/CÔ
+        // LINK APP SCRIPT ĐÃ ĐƯỢC CẤU HÌNH CỦA THẦY/CÔ
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhzcVBWIZDFrx_a-HZNdQfVCOi_IYHok-nItZz2FTon2bkMMtI4g67BcQrA1JDI2jiGQ/exec"; 
+
+        // Dữ liệu danh sách lớp chia theo nhóm (Kèm MSSV)
+        const studentData = {
+            "Nhóm 1 - Cá Vàng": [
+                "23160019 - Lâm Yến Nhi (NT)", 
+                "23160007 - Nguyễn Lê Thảo Tiên", 
+                "23160011 - Phùng Thị Trúc Đào", 
+                "23160002 - Trần Thị Như Hảo"
+            ],
+            "Nhóm 2 - Trà Tam Hảo": [
+                "23160022 - Nguyễn Thị Thanh Thảo (NT)", 
+                "23160004 - Đỗ Nguyễn Xuân Thanh", 
+                "23160006 - Lý Ngọc Tường Vân"
+            ],
+            "Nhóm 3 - Trai Đẹp": [
+                "23160016 - Vũ Đình Khoa (NT)", 
+                "23160009 - Nguyễn Minh Chí", 
+                "23160020 - Phạm Gia Phong", 
+                "23160015 - Võ Trần Tiến Huy"
+            ],
+            "Nhóm 4 - Phúc Lộc Thọ": [
+                "23160008 - Dương Quỳnh Anh (NT)", 
+                "23160012 - Nguyễn Hữu Hoàn", 
+                "23160024 - Vũ Hoàng Anh Thư"
+            ]
+        };
+
+        // Cập nhật dropdown sinh viên khi chọn nhóm
+        function updateStudents() {
+            const nhomSelect = document.getElementById("nhom");
+            const nguoiGhiSelect = document.getElementById("nguoiGhi");
+            const selectedNhom = nhomSelect.value;
+
+            nguoiGhiSelect.innerHTML = ""; 
+
+            if (selectedNhom && studentData[selectedNhom]) {
+                nguoiGhiSelect.disabled = false;
+                let defaultOption = document.createElement("option");
+                defaultOption.text = "-- Chọn MSSV & Tên của bạn --";
+                defaultOption.value = "";
+                nguoiGhiSelect.add(defaultOption);
+
+                studentData[selectedNhom].forEach(name => {
+                    let option = document.createElement("option");
+                    option.text = name;
+                    option.value = name;
+                    nguoiGhiSelect.add(option);
+                });
+            } else {
+                nguoiGhiSelect.disabled = true;
+                let option = document.createElement("option");
+                option.text = "-- Vui lòng chọn nhóm trước --";
+                nguoiGhiSelect.add(option);
+            }
+        }
 
         // Đổi câu hỏi hướng dẫn tùy theo lựa chọn
         function changePrompt() {
@@ -113,27 +180,40 @@
             status.innerText = "Đang tải lên hệ thống...";
 
             const chuDeText = document.getElementById('chuDe').options[document.getElementById('chuDe').selectedIndex].text;
+            const nguoiGhiText = document.getElementById('nguoiGhi').value;
+
+            // Tự động tách chuỗi "23160019 - Lâm Yến Nhi (NT)" thành MSSV và Họ Tên
+            let extractedMssv = "";
+            let extractedName = "";
+            if(nguoiGhiText.includes(" - ")) {
+                let parts = nguoiGhiText.split(" - ");
+                extractedMssv = parts[0].trim();
+                extractedName = parts[1].trim();
+            } else {
+                extractedMssv = "Không rõ";
+                extractedName = nguoiGhiText;
+            }
 
             const payload = {
                 action: "save_canhan_longhai",
-                mssv: document.getElementById('mssv').value,
-                hoTen: document.getElementById('hoTen').value,
+                mssv: extractedMssv,
+                hoTen: extractedName,
                 chuDe: chuDeText,
                 cauTraLoi: document.getElementById('cauTraLoi').value,
                 imageBase64: base64Image,
-                imageName: "CN_" + document.getElementById('mssv').value + "_" + document.getElementById('chuDe').value + ".jpg"
+                imageName: "CN_" + extractedMssv + "_" + document.getElementById('chuDe').value + ".jpg"
             };
 
             fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) })
             .then(() => {
                 btn.innerText = "✅ Đã nộp thành công!";
                 status.className = "text-center text-sm font-semibold mt-2 text-green-600";
-                status.innerText = "Điểm của bạn đã được ghi nhận!";
+                status.innerText = "Bài thu hoạch của bạn đã được ghi nhận!";
                 setTimeout(() => {
-                    document.getElementById('cauTraLoi').value = ""; // Chỉ xóa câu trả lời, giữ lại MSSV và tên cho lần nhập sau
+                    document.getElementById('cauTraLoi').value = ""; // Chỉ xóa câu trả lời
                     document.getElementById('imageInput').value = "";
                     document.getElementById('imagePreview').classList.add('hidden');
-                    base64Image = ""; btn.disabled = false; btn.innerText = "📤 Gửi Bài Cá Nhân"; status.classList.add('hidden');
+                    base64Image = ""; btn.disabled = false; btn.innerText = "📤 Nộp Bài Thu Hoạch Cá Nhân"; status.classList.add('hidden');
                 }, 3000);
             }).catch(err => {
                 btn.disabled = false; btn.innerText = "❌ Lỗi, nộp lại";
