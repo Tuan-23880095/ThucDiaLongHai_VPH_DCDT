@@ -1,1 +1,639 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bối Cảnh Địa Chất Đệ Tứ Long Hải</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* CSS tuỳ chỉnh tối thiểu để hỗ trợ Tailwind và Chart.js */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; color: #334155; }
+        .chart-container { position: relative; width: 100%; max-width: 700px; margin-left: auto; margin-right: auto; height: 320px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 380px; } }
+        
+        /* Hiệu ứng tab active */
+        .tab-btn { transition: all 0.3s ease; }
+        .tab-btn.active { border-bottom: 4px solid #0369a1; color: #0369a1; font-weight: 700; background-color: #f1f5f9; }
+        
+        /* Hiệu ứng tương tác cho lớp phong hóa */
+        .weathering-layer { transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+        .weathering-layer:hover { transform: translateX(10px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .weathering-layer.active-layer { border-left: 8px solid #0f172a; font-weight: bold; }
+        
+        /* Layout mô phỏng động lực bờ biển */
+        .coast-simulator { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; height: 150px; }
+        .coast-land { background-color: #fcd34d; border-radius: 8px 0 0 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #78350f; position: relative; overflow: hidden; transition: width 0.5s; }
+        .coast-sea { background-color: #bae6fd; border-radius: 0 8px 8px 0; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .wave { position: absolute; font-size: 24px; animation: waveMove 3s infinite linear; color: #0284c7; }
+        @keyframes waveMove { 0% { right: -20px; opacity: 0; } 50% { opacity: 1; } 100% { right: 100%; opacity: 0; } }
+    </style>
 
+    <!-- Chosen Palette: Warm Sand & Ocean Blues -->
+    <!-- Application Structure Plan: Ứng dụng được chia thành 4 phần chính tương ứng với chu trình thạch học. Bổ sung Modal (Pop-up) để hiển thị chi tiết thông tin chuyên sâu của các hệ tầng/phức hệ magma khi click. -->
+    <!-- Visualization & Content Choices: CSS block diagram (vỏ phong hóa), Radar chart (So sánh trầm tích), Hình ảnh bản đồ/cấu tạo, CSS/JS Animation (Mô phỏng động lực). Modal box. KHÔNG SỬ DỤNG SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white py-6 shadow-md z-10">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Bối Cảnh Địa Chất Đệ Tứ Long Hải</h1>
+            <p class="text-slate-300 mt-2 text-sm md:text-base">Khám phá chu trình thạch học đới bờ: Từ kiến tạo móng đá cổ Mesozoi đến động lực học Holocen.</p>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white shadow-sm sticky top-0 z-20">
+        <div class="container mx-auto px-4 max-w-5xl flex flex-wrap" id="nav-tabs">
+            <button class="tab-btn active flex-1 py-3 px-2 text-sm md:text-base font-medium text-slate-600 hover:text-sky-700 focus:outline-none" data-target="tab-phonghoa">
+                &#9635; 1. Kiến Tạo & Phong Hóa
+            </button>
+            <button class="tab-btn flex-1 py-3 px-2 text-sm md:text-base font-medium text-slate-600 hover:text-sky-700 focus:outline-none" data-target="tab-tramtich">
+                &#9635; 2. Trầm Tích Đệ Tứ
+            </button>
+            <button class="tab-btn flex-1 py-3 px-2 text-sm md:text-base font-medium text-slate-600 hover:text-sky-700 focus:outline-none" data-target="tab-dongluc">
+                &#9635; 3. Động Lực Đới Bờ
+            </button>
+            <button class="tab-btn flex-1 py-3 px-2 text-sm md:text-base font-medium text-slate-600 hover:text-sky-700 focus:outline-none" data-target="tab-tainguyen">
+                &#9635; 4. Tài Nguyên
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-5xl" id="main-content">
+        <!-- Content will be injected here by JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-200 py-4 mt-auto border-t border-slate-300">
+        <div class="container mx-auto px-4 max-w-5xl text-center text-sm text-slate-600">
+            Dữ liệu tổng hợp từ Báo cáo Khảo sát Địa chất Bãi biển Long Hải và khu vực Dinh Cô.
+        </div>
+    </footer>
+
+    <!-- MODAL ĐỂ HIỂN THỊ CHI TIẾT THÀNH TẠO -->
+    <div id="formation-modal" class="fixed inset-0 bg-slate-900 bg-opacity-60 hidden z-50 flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+            <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-xl">
+                <h3 id="modal-title" class="text-xl font-bold text-sky-800">Tiêu đề</h3>
+                <button onclick="closeFormationModal()" class="text-slate-400 hover:text-red-500 text-3xl font-bold leading-none">&times;</button>
+            </div>
+            <div id="modal-content" class="p-6 text-slate-700 text-sm md:text-base space-y-3 overflow-y-auto">
+                <!-- Nội dung được tiêm từ JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates for Tabs -->
+    <script type="text/template" id="tpl-phonghoa">
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-slate-800 mb-2">Bối Cảnh Kiến Tạo, Đá Gốc & Phong Hóa</h2>
+            <p class="text-slate-600 bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+                <strong>Giới thiệu Mục:</strong> Chu trình trầm tích ven bờ Long Hải bắt đầu từ những biến động kiến tạo sâu trong vỏ trái đất và sự phá hủy các khối núi đá magma sát biển. Đặc điểm địa chất khu vực bờ biển Long Hải mang những nét đặc trưng của một <strong>rìa lục địa tích cực</strong>, thể hiện qua sự tương tác phức tạp giữa nền đá gốc magma cổ (phun trào và xâm nhập) và các lớp phủ trầm tích bở rời kỷ Đệ tứ.
+            </p>
+        </div>
+
+        <!-- KIẾN TẠO VÀ BẢN ĐỒ -->
+        <div class="mb-8 bg-white p-6 rounded-xl shadow-md border border-slate-200">
+            <h3 class="font-bold text-lg mb-4 text-sky-800 border-b pb-2">1. Bối cảnh đứt gãy và cấu trúc kiến tạo</h3>
+            <p class="text-slate-700 mb-4 text-sm md:text-base">Khu vực bãi biển Long Hải nằm trên bình đồ chịu sự chi phối của hệ thống đứt gãy phương Đông Bắc - Tây Nam, tiêu biểu là <strong>đứt gãy Long Hải - Tuy Phong</strong> (hay đứt gãy Cà Ná - Vũng Tàu). Đứt gãy này có độ sâu xuyên vỏ, dốc về phía Đông Nam với góc 70-75°. Dọc theo đứt gãy có các biểu hiện hoạt động kiến tạo rõ rệt trong kỷ Pliocen - Đệ Tứ (sụt hạ đáy biển, trượt thuận - bằng trái).</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+                <div class="md:col-span-2">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/VungTau-diachat%20-new02%20copy.jpg?alt=media&token=b051f267-721a-441e-b36e-22617a8754d1" alt="" class="w-full rounded border border-slate-200 object-cover hover:shadow-lg transition cursor-pointer" onclick="window.open(this.src, '_blank')">
+                    <p class="text-xs text-center text-slate-500 mt-2 italic">Bản đồ địa chất Vũng Tàu - Long Hải (Click để phóng to)</p>
+                </div>
+                <div class="md:col-span-1">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/ChiDan-in-new.jpg?alt=media&token=f10317ec-8692-47ae-a236-7e91bbca1e56" alt="" class="w-full rounded border border-slate-200 object-cover hover:shadow-lg transition cursor-pointer" onclick="window.open(this.src, '_blank')">
+                    <p class="text-xs text-center text-slate-500 mt-2 italic">Bảng chú giải</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-8 bg-white p-6 rounded-xl shadow-md border border-slate-200">
+            <h3 class="font-bold text-lg mb-4 text-sky-800 border-b pb-2">2. Đặc điểm nền đá Magma cổ</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Phức hệ Định Quán và Đèo Cả -->
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-2"><span class="text-xl">&#9670;</span> Đá Xâm Nhập (Định Quán & Đèo Cả)</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed mb-3">Nền tảng cấu tạo nên các khối núi nổi bật. Thành phần thạch học chủ đạo là <strong>granit biotit</strong> và <strong>granit biotit có hornblend</strong>. Magma tiến hóa thuận từ diorit &rarr; granodiorit &rarr; granit, mang đặc trưng của <strong>granit kiểu I</strong>.</p>
+                    </div>
+                    <div class="flex gap-2 mt-2">
+                        <button onclick="openFormationModal('dinhquan')" class="px-3 py-1.5 bg-slate-200 hover:bg-sky-100 hover:text-sky-700 text-slate-700 rounded text-xs font-bold transition border border-slate-300">Chi tiết Phức hệ Định Quán</button>
+                        <button onclick="openFormationModal('deoca')" class="px-3 py-1.5 bg-slate-200 hover:bg-sky-100 hover:text-sky-700 text-slate-700 rounded text-xs font-bold transition border border-slate-300">Chi tiết Phức hệ Đèo Cả</button>
+                    </div>
+                </div>
+
+                <!-- Hệ tầng Nha Trang -->
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold text-slate-800 mb-2 flex items-center gap-2"><span class="text-xl">&#9672;</span> Đá Phun Trào (Hệ tầng Nha Trang)</h4>
+                        <p class="text-sm text-slate-700 leading-relaxed mb-3">Sự cộng sinh và đi cùng với các đá phun trào núi lửa lục địa. Tạo nên các cấu trúc địa lũy, mũi đá nhô ra biển (Mũi Dinh Cô) và là nguồn cung cấp vật liệu gốc dồi dào cho các bãi cát trầm tích đới bờ.</p>
+                    </div>
+                    <div class="mt-2">
+                        <button onclick="openFormationModal('nhatrang')" class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded text-xs font-bold transition border border-amber-300">Chi tiết Hệ tầng Nha Trang</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <!-- Mặt cắt tương tác -->
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                <h3 class="font-bold text-lg mb-2 text-center text-sky-800">3. Mặt Cắt Vỏ Phong Hóa Từ Đá Gốc</h3>
+                <p class="text-xs text-center text-slate-500 mb-4">Click vào từng lớp để xem chi tiết</p>
+                <div class="flex flex-col gap-2 relative">
+                    <!-- Các lớp từ trên xuống dưới -->
+                    <div class="weathering-layer bg-red-800 text-white p-3 rounded shadow" data-info="laterit">
+                        <span class="font-bold">Đới Laterit / Đất ngọn</span> (Bề mặt)
+                    </div>
+                    <div class="weathering-layer bg-orange-600 text-white p-4 rounded shadow" data-info="litoma">
+                        <span class="font-bold">Đới Litoma</span>
+                    </div>
+                    <div class="weathering-layer bg-yellow-600 text-white p-5 rounded shadow" data-info="saprolit">
+                        <span class="font-bold">Đới Saprolit</span>
+                    </div>
+                    <div class="weathering-layer bg-slate-500 text-white p-6 rounded shadow" data-info="bedrock">
+                        <span class="font-bold">Đá Gốc Magma Xâm Nhập</span> (Creta muộn - Paleogen)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khung hiển thị thông tin -->
+            <div class="bg-sky-50 p-6 rounded-xl shadow-md border border-sky-100 min-h-[300px] flex flex-col justify-center">
+                <div id="weathering-info" class="text-slate-700">
+                    <div class="text-center text-4xl mb-4">&#9757;</div>
+                    <h3 class="text-xl font-bold text-center text-sky-800 mb-2">Nguồn cung cấp vật liệu</h3>
+                    <p class="text-center text-sm">Sườn đá Granite gần biển chính là điểm xuất phát của chu trình trầm tích. Hãy nhấp vào biểu đồ bên cạnh để xem quá trình biến đổi đá gốc thành vật liệu trầm tích đổ ra bãi biển.</p>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="tpl-tramtich">
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-slate-800 mb-2">Đặc Điểm Trầm Tích Tại Bãi Biển Long Hải</h2>
+            <p class="text-slate-600 bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+                <strong>Giới thiệu Mục:</strong> Bề mặt bãi biển Long Hải cho thấy một hệ thống trầm tích phong phú với cấu trúc mặt cắt phân đới rõ ràng: đới sóng vỗ bờ (swash), thềm đê cát (berm) và hậu bờ (backshore). Đồ thị và hình ảnh dưới đây đi sâu vào các đặc tính hạt và năng lượng môi trường.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+            <!-- Left Column: Chart & Image 1 -->
+            <div class="flex flex-col gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h3 class="font-bold text-lg mb-2 text-center text-sky-800">So Sánh Đặc Tính Trầm Tích Đệ Tứ</h3>
+                    <p class="text-xs text-center text-slate-500 mb-4">(Thang điểm 1-10 mô tả tính chất tương đối)</p>
+                    <div class="chart-container">
+                        <canvas id="sedimentChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h3 class="font-bold text-lg mb-2 text-sky-800">Độ Mài Tròn & Chọn Lọc Của Hạt Cát</h3>
+                    <p class="text-sm text-slate-600 mb-3">Cát tại bãi biển Long Hải rất đa dạng (mịn, trung, thô) mang các đặc điểm về độ mài tròn và độ chọn lọc khác nhau tùy thuộc vào phân đới bờ biển.</p>
+                    <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/dau%20tron%20canh.jpg?alt=media&token=8f163971-f78d-488a-bce9-2655f1eee1a9" alt="" class="w-full rounded border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity" onclick="window.open(this.src, '_blank')">
+                </div>
+            </div>
+
+            <!-- Right Column: Text Information -->
+            <div class="flex flex-col gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-sky-600">
+                    <h4 class="font-bold text-sky-800 text-lg flex items-center gap-2">&#9672; Cấu Trúc Mặt Cắt Bãi Biển</h4>
+                    <p class="text-sm mt-2">Bãi biển Long Hải có hệ thống phân đới đặc trưng từ biển vào đất liền:</p>
+                    <ul class="list-disc pl-5 mt-2 text-sm space-y-2 text-slate-700">
+                        <li><strong>Đới sóng vỗ bờ (Swash zone):</strong> Chịu tác động liên tục của sóng lên và sóng rút. Cát bị xáo trộn mạnh, độ chọn lọc tốt.</li>
+                        <li><strong>Thềm đê cát (Berm):</strong> Phần nhô cao hình thành do vật liệu bồi đắp bởi các đợt sóng lớn lúc triều cường.</li>
+                        <li><strong>Hậu bờ (Backshore):</strong> Vùng khô ráo nằm phía sau berm, thường chỉ ngập khi có bão lớn, chịu tác động của gió mang vật liệu mịn vào tạo cồn cát.</li>
+                    </ul>
+                    <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/cautrucbaibien.jpg?alt=media&token=3967c1dd-5b1a-4918-a229-0fed97ee35fa" alt="" class="w-full rounded mt-4 border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity" onclick="window.open(this.src, '_blank')">
+                    <p class="text-xs text-center text-slate-500 mt-2 italic">Mô hình cấu trúc phân đới bãi biển (Click để phóng to)</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-amber-500">
+                    <h4 class="font-bold text-amber-800 text-lg flex items-center gap-2">&#9672; Năng Lượng Môi Trường & Đặc Điểm Hạt</h4>
+                    <p class="text-sm mt-2 text-slate-700 leading-relaxed">
+                        Tại một số đới tích tụ vật liệu thô trên bãi biển Long Hải, xuất hiện tập trung dày đặc các <strong>hạt sỏi và mảnh vụn vỏ sò lớn</strong>.<br><br>
+                        Sự phân đẳng, độ chọn lọc của vật liệu cùng với việc <strong>vắng bóng hoàn toàn các hạt mịn</strong> là minh chứng rõ nét cho thấy khu vực này chịu tác động của môi trường <strong>năng lượng sóng biển rất cao</strong>, khiến các hạt mịn dễ dàng bị dòng nước cuốn trôi đi nơi khác, chỉ để lại vật liệu thô nặng.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BỔ SUNG PHÂN VỊ ĐỊA TẦNG ĐỆ TỨ -->
+        <div class="mt-8 bg-white p-6 rounded-xl shadow-md border border-slate-200">
+            <h3 class="font-bold text-lg mb-4 text-sky-800 border-b pb-2">Tiến Hóa Trầm Tích Bở Rời Đệ Tứ</h3>
+            <p class="text-sm text-slate-700 mb-4">Phủ bất chỉnh hợp lên trên nền đá magma là các trầm tích bở rời Đệ tứ được hình thành qua nhiều chu kỳ thay đổi mực nước biển và hoạt động sông ngòi ven biển. Hệ trầm tích được chia thành các phân vị chính:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="p-4 border-t-4 border-slate-400 bg-slate-50 rounded shadow-sm">
+                    <h4 class="font-bold text-slate-800 text-sm">Pleistocene sớm-giữa <br>($Q_1^{1-2}$)</h4>
+                    <p class="text-xs text-slate-600 mt-2">Nằm ở phần thấp của mặt cắt, thường bao gồm các tướng cát bùn aluvi và bùn cát sông - biển.</p>
+                </div>
+                <div class="p-4 border-t-4 border-red-500 bg-red-50 rounded shadow-sm">
+                    <h4 class="font-bold text-red-800 text-sm">Cát cổ Hệ tầng Phan Thiết <br>($mQ_1^{2-3}pt$)</h4>
+                    <p class="text-xs text-slate-700 mt-2">Tạo đồi cát lượn sóng dọc bờ. Cát hạt trung-mịn màu đỏ, đỏ rượu vang. <strong>94,8% thạch anh bọc màng hematit</strong>. Nguồn gốc gió (eolian), phong hóa mạnh, không chứa vỏ sinh vật.</p>
+                </div>
+                <div class="p-4 border-t-4 border-amber-400 bg-amber-50 rounded shadow-sm">
+                    <h4 class="font-bold text-amber-800 text-sm">Hệ tầng Hàm Tân <br>($mQ_2^{1-2}ht$)</h4>
+                    <p class="text-xs text-slate-700 mt-2">Trầm tích cát biển phân bố ở các thềm biển thấp. Đặc trưng bởi màu xám sáng, vàng xám, độ chọn lọc tốt.</p>
+                </div>
+                <div class="p-4 border-t-4 border-sky-500 bg-sky-50 rounded shadow-sm">
+                    <h4 class="font-bold text-sky-800 text-sm">Holocene hiện đại <br>($Q_2^3$)</h4>
+                    <p class="text-xs text-slate-700 mt-2">Bãi cát bồi tụ hiện nay. Chịu nhào nặn mạnh của sóng, chọn lọc tốt (70-85% thạch anh, 10-20% vỏ sinh vật). Chứa <strong>ilmenit, zircon, magnetit</strong> từ phong hóa granitoid Minh Đạm.</p>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="tpl-dongluc">
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-slate-800 mb-2">Đặc Điểm Địa Chất Khu Vực Mũi Dinh Cô & Động Lực Học</h2>
+            <p class="text-slate-600 bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+                <strong>Giới thiệu Mục:</strong> Dinh Cô tọa lạc trên ngọn núi Cô-Sơn, là một dạng địa hình nhô cao sát bờ. Tại đây, đặc điểm địa chất trầm tích nổi bật nhất là sự xuất hiện của các cấu trúc gợn sóng cát (Ripple marks). Đây là "chìa khóa" để giải mã động lực học dòng chảy ven bờ.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            <!-- Left Column: Interactive Simulator -->
+            <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 flex flex-col">
+                <div class="flex justify-between items-end mb-6 border-b pb-4 flex-wrap gap-4">
+                    <div>
+                        <h3 class="font-bold text-lg text-sky-800">Mô phỏng Dòng Chảy Ven Bờ (Longshore Drift)</h3>
+                        <p class="text-sm text-slate-500">Tương tác để xem vai trò cản dòng của địa hình nhô cao.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="btn-open-beach" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded font-medium text-sm transition">Bãi Trống</button>
+                        <button id="btn-headland" class="px-3 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded font-medium text-sm transition">Mũi Dinh Cô (Đá chắn)</button>
+                    </div>
+                </div>
+
+                <!-- CSS Animation Simulator -->
+                <div class="coast-simulator bg-slate-100 rounded-lg p-2 border border-slate-300 relative">
+                    <div id="sim-land" class="coast-land transition-all duration-500 ease-in-out w-full border-r-4 border-amber-600">
+                        <span class="z-10 rotate-[-90deg] md:rotate-0 text-sm">Bãi Cát</span>
+                        <div id="sim-rock" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-slate-800 text-white text-[10px] p-2 rounded-l font-bold hidden transition-opacity">MŨI DINH CÔ</div>
+                    </div>
+                    <div class="coast-sea flex-grow">
+                        <span class="z-10 text-sky-800 font-bold opacity-50">Biển Cả</span>
+                        <div class="wave" style="top: 20%; animation-delay: 0s;">&#12316;</div>
+                        <div class="wave" style="top: 50%; animation-delay: 1.5s;">&#12316;</div>
+                        <div class="wave" style="top: 80%; animation-delay: 0.7s;">&#12316;</div>
+                        
+                        <!-- Longshore Current Indicator -->
+                        <div id="sim-current" class="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-sky-700 font-bold text-xs md:text-sm tracking-widest transition-all w-full text-center">
+                            &larr; Dòng chảy ven bờ &larr;
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sim-description" class="mt-6 p-4 bg-sky-50 rounded text-sm text-slate-700 border-l-4 border-sky-400 flex-grow">
+                    Nhấp vào các nút bên trên để xem sự thay đổi động lực đới bờ khi có/không có mũi đá Dinh Cô.
+                </div>
+            </div>
+
+            <!-- Right Column: Image 2 & Ripple Details -->
+            <div class="flex flex-col gap-6">
+                <!-- Vận tốc dòng chảy (Hjulstrom) -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                    <h3 class="font-bold text-lg mb-2 text-sky-800">Quan hệ giữa Vận tốc dòng chảy & Kích thước hạt</h3>
+                    <p class="text-sm text-slate-600 mb-3">Biểu đồ Hjulström cho thấy vận tốc nước (năng lượng môi trường) quyết định việc các hạt mịn bị xói mòn, rửa trôi trong khi vật liệu thô được tích tụ lại tại bãi biển.</p>
+                    <img src="https://firebasestorage.googleapis.com/v0/b/link-anh-web.firebasestorage.app/o/dongchayva%20kich%20thuoc%20hat.jpg?alt=media&token=ca8e0eac-4bd9-4c5d-a61e-f38ad44fec1b" alt="" class="w-full rounded border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity" onclick="window.open(this.src, '_blank')">
+                </div>
+                
+                <div class="bg-white p-5 rounded-xl shadow-md border-l-4 border-amber-600">
+                    <h4 class="font-bold text-slate-800 mb-2">Giải mã Cấu Trúc Gợn Sóng (Ripple Marks) tại Dinh Cô</h4>
+                    <p class="text-sm text-slate-700 mb-2">Các cấu trúc gợn sóng cát nổi bật tại khu vực bãi cát mũi Dinh Cô là dữ liệu quan trọng để giải mã động lực học:</p>
+                    <ul class="list-disc pl-5 text-sm text-slate-700 space-y-1">
+                        <li><strong>Thông số đo đạc:</strong> Bằng cách đo thông số <em>bước sóng (wavelength)</em> và <em>biên độ (amplitude)</em>, nhà địa chất đánh giá được năng lượng dòng chảy.</li>
+                        <li><strong>Hình thái bất đối xứng:</strong> Chỉ thị dòng chảy một chiều (như dòng chảy ven bờ). Hướng sườn dốc thoải hướng về phía sườn dốc đứng chính là hướng dòng chảy.</li>
+                        <li><strong>Hình thái đối xứng:</strong> Phản ánh chuyển động dao động khứ hồi của sóng vỗ trực diện vào bờ.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="tpl-tainguyen">
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-slate-800 mb-2">Tiềm Năng Khoáng Sản & Nước Dưới Đất</h2>
+            <p class="text-slate-600 bg-white p-4 rounded-lg shadow-sm border border-slate-100">
+                <strong>Giới thiệu Mục:</strong> Trầm tích đới bờ không chỉ là cảnh quan mà còn là nơi tập trung tài nguyên. Quá trình chọn lọc cơ học năng lượng cao của sóng đã giúp làm giàu các khoáng vật nặng có ích. Mục này giới thiệu 3 nguồn tài nguyên Đệ tứ chủ lực tại khu vực Long Hải.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden hover:shadow-lg transition">
+                <div class="bg-slate-800 text-white p-4 text-center text-3xl">&#9935;</div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">Sa Khoáng Biển</h3>
+                    <p class="text-sm text-slate-600 mb-3">Sóng biển liên tục gia công, xói mòn và rửa trôi các hạt khoáng vật nhẹ (như thạch anh), để lại các vệt cát đen phân lớp mỏng, nặng ngay trên bãi (ilmenite).</p>
+                    <ul class="text-sm text-slate-700 list-disc pl-4 space-y-1 font-medium">
+                        <li>Ilmenite (Titanium)</li>
+                        <li>Zircon</li>
+                        <li>Monazite (vết)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden hover:shadow-lg transition">
+                <div class="bg-amber-100 text-amber-700 p-4 text-center text-3xl">&#9728;</div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">Cát Thủy Tinh & Xây Dựng</h3>
+                    <p class="text-sm text-slate-600 mb-3">Tập trung chủ yếu tại các cồn cát ven biển ($mvQ_2$). Quá trình vận chuyển bởi gió làm tăng độ chọn lọc hạt lên rất cao.</p>
+                    <ul class="text-sm text-slate-700 list-disc pl-4 space-y-1 font-medium">
+                        <li>Thành phần chính: Thạch anh</li>
+                        <li>Độ tinh khiết cao</li>
+                        <li>Ứng dụng công nghiệp & xây dựng</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden hover:shadow-lg transition">
+                <div class="bg-sky-100 text-sky-700 p-4 text-center text-3xl">&#128167;</div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">Nước Dưới Đất</h3>
+                    <p class="text-sm text-slate-600 mb-3">Tầng chứa nước lỗ hổng trong trầm tích Đệ tứ hạt thô ($qh$ và $qp$), nằm ngay trên tầng chứa nước khe nứt của đá móng nứt nẻ.</p>
+                    <ul class="text-sm text-slate-700 list-disc pl-4 space-y-1 font-medium">
+                        <li>Cung cấp nước ngọt sinh hoạt</li>
+                        <li>Trữ lượng phụ thuộc lượng mưa</li>
+                        <li>Nguy cơ xâm nhập mặn nếu khai thác quá mức</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-sky-900 text-white p-6 rounded-xl shadow-md text-center">
+            <h3 class="text-xl font-bold mb-2">Tổng Kết Chu Trình Thạch Học Ven Bờ</h3>
+            <p class="text-sm md:text-base text-sky-100 max-w-3xl mx-auto leading-relaxed">
+                Khu vực Long Hải - Dinh Cô là minh chứng sống động cho chu trình địa chất: Các khối <strong>granitoid</strong> nứt nẻ bị <strong>phong hóa</strong> mãnh liệt tạo thành vỏ saprolit/litoma $\rightarrow$ Vật liệu được <strong>vận chuyển</strong> đổ ra biển $\rightarrow$ Sóng và dòng chảy ven bờ <strong>gia công, phân đới và tích tụ</strong> (lưu lại dấu ấn gợn sóng ripple) tạo nên các bãi biển đệ tứ hiện đại với nguồn tài nguyên khoáng sản giá trị.
+            </p>
+        </div>
+    </script>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // State & Data Management
+        const appState = {
+            currentTab: 'tab-phonghoa',
+            chartInstance: null,
+            weatheringData: {
+                'laterit': {
+                    title: 'Đới Laterit / Đất Ngọn',
+                    content: 'Nằm trên cùng của mặt cắt, lớp vỏ này bị xói mòn mạnh nhất. Rửa trôi Silica (Desilication), tích tụ Sắt và Nhôm tạo màu đỏ nâu, cấu tạo vón cục cứng.'
+                },
+                'litoma': {
+                    title: 'Đới Litoma (Sét loang lổ)',
+                    content: 'Đới phong hóa hóa học triệt để nơi kiến trúc đá gốc bị phá hủy hoàn toàn. Các khoáng vật fenspat trong granit bị thủy phân biến đổi thành khoáng vật sét (như kaolinite). Đây là nguồn cung cấp vật liệu hạt mịn (sét, bột).'
+                },
+                'saprolit': {
+                    title: 'Đới Saprolit (Đá phong hóa bán phần)',
+                    content: 'Phong hóa cơ học và hóa học trung bình. Đá đã mềm bở nhưng vẫn giữ lại cấu trúc tàn dư của đá gốc. Thạch anh (khó bị phong hóa) được giải phóng từ đới này, cung cấp lượng lớn cát thạch anh cho bãi biển.'
+                },
+                'bedrock': {
+                    title: 'Đá Gốc: Xâm Nhập & Phun Trào (Mesozoi)',
+                    content: 'Nền tảng của rìa lục địa tích cực, gồm <strong>phức hệ Định Quán - Đèo Cả</strong> (granit biotit kiểu I) cộng sinh cùng đá phun trào <strong>hệ tầng Nha Trang</strong>. Lực lượng đá nứt nẻ này là nguồn cung cấp thạch anh và khoáng vật nặng dồi dào cho trầm tích Đệ tứ.'
+                }
+            },
+            formationDetails: {
+                'nhatrang': {
+                    title: 'Hệ tầng Nha Trang (Nha Trang Formation)',
+                    content: `
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li><strong class="text-sky-700">Tuổi:</strong> Creta muộn (Late Cretaceous).</li>
+                            <li><strong class="text-sky-700">Phân bố:</strong> Nam Trung Bộ và Đông Nam Bộ (III.2); bao gồm các tỉnh Khánh Hoà, Ninh Thuận, Bình Thuận, Lâm Đồng và Bà Rịa - Vũng Tàu.</li>
+                            <li><strong class="text-sky-700">Thành phần thạch học (300 - 650m):</strong><br>
+                                a) Anđesit (60 m)<br>
+                                b) Ryolit, ryolit phân dải (130 m)<br>
+                                c) Tuf đacit, tuf felsit (105 m)<br>
+                                d) Ryolit porphyr (65 m)<br>
+                                e) Ryolit phân dải (115 m)<br>
+                                f) Ryolit porphyr (175 m)
+                            </li>
+                            <li><strong class="text-sky-700">Quan hệ địa tầng:</strong> Nằm phủ không chỉnh hợp trên granodiorit phức hệ Định Quán (tuổi Jura muộn).</li>
+                            <li><strong class="text-sky-700">Nguồn gốc:</strong> Nguồn núi lửa, lục địa (Volcanogenic, continental).</li>
+                            <li><strong class="text-sky-700">Tác giả/Năm lập:</strong> Belouxov A. và nnk (1984), Vũ Khúc (1999).</li>
+                        </ul>`
+                },
+                'dinhquan': {
+                    title: 'Phức hệ Định Quán (Định Quán Complex)',
+                    content: `
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li><strong class="text-sky-700">Tuổi:</strong> Jura muộn (Late Jurassic); K/Ar: 140 Ma.</li>
+                            <li><strong class="text-sky-700">Phân bố:</strong> Nam Trung Bộ và Đông Nam Bộ (III.2); bao gồm các tỉnh Đồng Nai, Lâm Đồng, Gia Lai, Đăk Lăk, Ninh Thuận. Nơi tiêu biểu: Thị trấn Định Quán (Tân Phú, Đồng Nai).</li>
+                            <li><strong class="text-sky-700">Thành phần thạch học:</strong><br>
+                                &bull; Pha 1: Điorit, điorit thạch anh, gabrođiorit đôi chỗ chứa pyroxen.<br>
+                                &bull; Pha 2: Granit biotit-hornblend hạt vừa, tonalit biotit-hornblend.<br>
+                                &bull; Pha 3: Granit biotit-hornblend hạt nhỏ đến vừa.<br>
+                                &bull; Đá mạch: Spesartit.
+                            </li>
+                            <li><strong class="text-sky-700">Quan hệ xuyên cắt:</strong> Xuyên cắt và gây biến chất tiếp xúc các hệ tầng La Ngà (J2) và Đèo Bảo Lộc (J3).</li>
+                            <li><strong class="text-sky-700">Kiểu Granit:</strong> Granit kiểu I (I-granite type).</li>
+                            <li><strong class="text-sky-700">Đồng nghĩa:</strong> Phức hệ Ankroet-Định Quán (một phần).</li>
+                        </ul>`
+                },
+                'deoca': {
+                    title: 'Phức hệ Đèo Cả (Đèo Cả Complex)',
+                    content: `
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li><strong class="text-sky-700">Tuổi:</strong> Creta (Cretaceous); K/Ar: 127 Ma; Rb/Sr: 82, 83, 87 Ma.</li>
+                            <li><strong class="text-sky-700">Phân bố:</strong> Nam Trung Bộ và Đông Nam Bộ (III.2); bao gồm các tỉnh Phú Yên, Bình Định, Gia Lai, Lâm Đồng, Bình Thuận. Nơi tiêu biểu: Đèo Cả (giữa Phú Yên và Khánh Hoà).</li>
+                            <li><strong class="text-sky-700">Thành phần thạch học:</strong><br>
+                                &bull; Pha 1: Granodiorit biotit.<br>
+                                &bull; Pha 2: Granit, granosyenit biotit (hornblend) hạt vừa đến lớn.<br>
+                                &bull; Pha 3: Granit biotit hạt nhỏ.<br>
+                                &bull; Đá mạch: Granit aplit, pegmatit.<br>
+                                <span class="text-slate-500 italic">(Đặc trưng hóa học: SiO2 = 77.06-76.54%; Na2O+K2O = 5.80-9.64%)</span>
+                            </li>
+                            <li><strong class="text-sky-700">Quan hệ xuyên cắt:</strong> Xuyên cắt đá núi lửa Hệ tầng Nha Trang (K).</li>
+                            <li><strong class="text-sky-700">Tác giả/Năm lập:</strong> Huỳnh Trung, Ngô Văn Khải và nnk (1980).</li>
+                        </ul>`
+                }
+            }
+        };
+
+        // DOM Elements
+        const mainContent = document.getElementById('main-content');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const modal = document.getElementById('formation-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalContent = document.getElementById('modal-content');
+
+        // Initialize App
+        function initApp() {
+            attachTabListeners();
+            renderTab(appState.currentTab);
+        }
+
+        // Tab Navigation Logic
+        function attachTabListeners() {
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const target = e.currentTarget.getAttribute('data-target');
+                    if(target !== appState.currentTab) {
+                        // Update active class
+                        tabBtns.forEach(b => b.classList.remove('active'));
+                        e.currentTarget.classList.add('active');
+                        // Update state and render
+                        appState.currentTab = target;
+                        renderTab(target);
+                    }
+                });
+            });
+        }
+
+        // Render Tab Content
+        function renderTab(tabId) {
+            // Clean up existing chart if present
+            if(appState.chartInstance) {
+                appState.chartInstance.destroy();
+                appState.chartInstance = null;
+            }
+
+            const templateId = 'tpl-' + tabId.split('-')[1];
+            const template = document.getElementById(templateId);
+            
+            if (template) {
+                mainContent.innerHTML = template.innerHTML;
+                
+                // Post-render actions based on specific tab
+                if(tabId === 'tab-phonghoa') initWeatheringInteraction();
+                if(tabId === 'tab-tramtich') initSedimentChart();
+                if(tabId === 'tab-dongluc') initCoastSimulator();
+            }
+        }
+
+        // Modal Functions (Global)
+        window.openFormationModal = function(formationKey) {
+            const data = appState.formationDetails[formationKey];
+            if(data) {
+                modalTitle.innerHTML = data.title;
+                modalContent.innerHTML = data.content;
+                modal.classList.remove('hidden');
+            }
+        };
+
+        window.closeFormationModal = function() {
+            modal.classList.add('hidden');
+        };
+
+        // Đóng modal khi click ra ngoài vùng xám
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeFormationModal();
+            }
+        });
+
+        // --- Tab 1: Weathering Logic ---
+        function initWeatheringInteraction() {
+            const layers = document.querySelectorAll('.weathering-layer');
+            const infoBox = document.getElementById('weathering-info');
+
+            layers.forEach(layer => {
+                layer.addEventListener('click', (e) => {
+                    // Update UI styling
+                    layers.forEach(l => l.classList.remove('active-layer', 'translate-x-2'));
+                    layer.classList.add('active-layer', 'translate-x-2');
+                    
+                    // Fetch data and update text
+                    const key = layer.getAttribute('data-info');
+                    const data = appState.weatheringData[key];
+                    
+                    infoBox.innerHTML = `
+                        <h3 class="text-xl font-bold text-sky-800 mb-3 border-b pb-2">${data.title}</h3>
+                        <p class="text-slate-700 leading-relaxed text-sm md:text-base">${data.content}</p>
+                    `;
+                });
+            });
+        }
+
+        // --- Tab 2: Chart.js Logic ---
+        function initSedimentChart() {
+            const ctx = document.getElementById('sedimentChart').getContext('2d');
+            
+            const data = {
+                labels: ['Độ Cố Kết', 'Độ Mài Tròn', 'Độ Chọn Lọc', 'Lượng Hạt Thô/Sỏi', 'Lượng Hạt Mịn (Bùn sét)'],
+                datasets: [
+                    {
+                        label: 'Pleistocen (Q1) - Thềm cao',
+                        data: [8, 4, 3, 5, 7], // Điểm khái niệm
+                        backgroundColor: 'rgba(217, 119, 6, 0.6)', // Amber
+                        borderColor: 'rgb(180, 83, 9)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Holocen (Q2) - Bãi biển hiện đại',
+                        data: [2, 8, 9, 8, 1], // Ít hạt mịn do năng lượng sóng cao rửa trôi
+                        backgroundColor: 'rgba(2, 132, 199, 0.6)', // Sky blue
+                        borderColor: 'rgb(3, 105, 161)',
+                        borderWidth: 1
+                    }
+                ]
+            };
+
+            const config = {
+                type: 'radar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 10,
+                            ticks: { display: false } 
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + '/10';
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            appState.chartInstance = new Chart(ctx, config);
+        }
+
+        // --- Tab 3: Coastal Dynamics Simulator Logic ---
+        function initCoastSimulator() {
+            const btnOpen = document.getElementById('btn-open-beach');
+            const btnHeadland = document.getElementById('btn-headland');
+            const land = document.getElementById('sim-land');
+            const rock = document.getElementById('sim-rock');
+            const desc = document.getElementById('sim-description');
+            const current = document.getElementById('sim-current');
+
+            btnOpen.addEventListener('click', () => {
+                land.style.width = '30%'; // Bãi hẹp, xói lở
+                rock.classList.add('hidden');
+                current.style.opacity = '1';
+                current.style.letterSpacing = '5px'; // Dòng chảy mạnh
+                desc.innerHTML = `<strong>Địa hình Bãi Trống:</strong> Không có vật cản, sóng biển và dòng chảy ven bờ tác động mạnh trực tiếp. Năng lượng dòng chảy cao dẫn đến hiện tượng <strong>xói lở bờ biển</strong>, cuốn trôi toàn bộ vật liệu mịn (sét, bột) đi nơi khác.`;
+                desc.className = "mt-6 p-4 bg-amber-50 rounded text-sm text-amber-800 border-l-4 border-amber-500 flex-grow";
+            });
+
+            btnHeadland.addEventListener('click', () => {
+                land.style.width = '60%'; // Bãi rộng, bồi tụ
+                rock.classList.remove('hidden');
+                current.style.opacity = '0.5';
+                current.style.letterSpacing = '1px'; // Dòng chảy bị hãm
+                desc.innerHTML = `<strong>Địa hình Mũi Dinh Cô:</strong> Mũi đá nhô ra làm cản trở dòng chảy ven bờ, làm giảm năng lượng môi trường. Hậu quả là vật liệu trầm tích (nhất là vật liệu thô) bị rơi lại và <strong>tích tụ</strong> tạo nên bãi cát rộng. Tại đây lưu giữ các dấu vết <em>gợn sóng (ripple)</em> đặc trưng.`;
+                desc.className = "mt-6 p-4 bg-sky-50 rounded text-sm text-sky-800 border-l-4 border-sky-500 flex-grow";
+            });
+        }
+
+        // Run app on load
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
