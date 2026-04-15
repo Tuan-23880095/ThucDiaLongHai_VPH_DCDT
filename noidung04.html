@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu 04 - Vỏ Phong Hóa Minh Đạm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen pb-10">
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg">
+        <div class="bg-red-600 text-white p-4 flex items-center justify-between sticky top-0 z-10">
+            <a href="index.html" class="text-white hover:text-gray-200">← Quay lại</a>
+            <h1 class="text-lg font-bold">Phiếu 04</h1>
+            <div class="w-8"></div>
+        </div>
+
+        <div class="p-6">
+            <h2 class="text-xl font-bold text-center text-red-700 mb-4">MẶT CẮT VỎ PHONG HÓA</h2>
+            
+            <form id="fieldForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700">Nhóm số:</label>
+                        <input type="text" id="nhom" required class="mt-1 w-full p-2 border rounded" placeholder="VD: Nhóm 1">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700">Người ghi:</label>
+                        <input type="text" id="nguoiGhi" required class="mt-1 w-full p-2 border rounded" placeholder="Họ tên">
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-3 rounded border">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tọa độ GPS:</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="gps" readonly class="flex-1 p-2 border rounded bg-gray-100 text-sm">
+                        <button type="button" onclick="getGPS()" class="bg-red-600 text-white px-3 py-2 rounded shadow hover:bg-red-700 text-sm">📍 Lấy</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">1. Phân loại kiểu vỏ phong hóa:</label>
+                    <select id="kieuPhongHoa" class="mt-1 w-full p-2 border rounded text-sm">
+                        <option value="Sialit (Sét Kaolin, Thạch anh)">Sialit (Sét Kaolin, Thạch anh - Trên Granite)</option>
+                        <option value="Feralit / Alferit (Đất đỏ, Laterit)">Feralit / Alferit (Đất đỏ, Laterit - Trên Bazan)</option>
+                        <option value="Sialferit / Ferosialit">Sialferit / Ferosialit (Trung gian)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">2. Chiều dày các đới quan sát được:</label>
+                    <div class="space-y-2 text-sm">
+                        <input type="text" id="doi1" class="w-full p-2 border rounded" placeholder="Đới Laterit (có/không, dày bao nhiêu?)">
+                        <input type="text" id="doi2" class="w-full p-2 border rounded" placeholder="Đới Litoma (Sét màu sắc, bề dày?)">
+                        <input type="text" id="doi3" class="w-full p-2 border rounded" placeholder="Đới Saprolit (Đá phong hóa dở dang?)">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">3. Ý nghĩa tài nguyên khoáng sản:</label>
+                    <textarea id="taiNguyen" rows="3" required class="mt-1 w-full p-2 border rounded" placeholder="Có thể khai thác vật liệu xây dựng, gốm sứ hay kim loại?"></textarea>
+                </div>
+
+                <div class="bg-red-50 p-3 rounded border border-red-200">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">📸 Chụp ảnh mặt cắt / Vẽ phác họa:</label>
+                    <input type="file" id="imageInput" accept="image/*" capture="environment" class="w-full text-sm">
+                    <img id="imagePreview" class="mt-3 rounded hidden max-h-48 mx-auto" />
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-red-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-red-700 transition mt-6">
+                    🚀 Gửi Dữ Liệu Lên Hệ Thống
+                </button>
+                <p id="statusMsg" class="text-center text-sm font-semibold mt-2 hidden"></p>
+            </form>
+        </div>
+    </div>
+
+    <canvas id="canvas" style="display:none;"></canvas>
+
+    <script>
+        // !!! THAY LINK CỦA BẠN VÀO ĐÂY !!!
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEpCJ5u9o-25Gz90VQU4BNUntIDvWyidn4ikGynGzvEsve8Yy95NY6bSU2c2rJzK8ivw/exec";
+
+        function getGPS() {
+            const gpsInput = document.getElementById('gps');
+            gpsInput.value = "Đang lấy...";
+            navigator.geolocation ? navigator.geolocation.getCurrentPosition(
+                pos => gpsInput.value = `X:${pos.coords.longitude.toFixed(5)}, Y:${pos.coords.latitude.toFixed(5)}`,
+                err => { gpsInput.value = "Lỗi GPS"; alert("Vui lòng bật GPS!"); }
+            ) : gpsInput.value = "Không hỗ trợ";
+        }
+
+        let base64Image = "", imageMimeType = "";
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.getElementById('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const scaleSize = 1000 / img.width;
+                    canvas.width = 1000; canvas.height = img.height * scaleSize;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    base64Image = canvas.toDataURL("image/jpeg", 0.7);
+                    imageMimeType = "image/jpeg";
+                    document.getElementById('imagePreview').src = base64Image;
+                    document.getElementById('imagePreview').classList.remove('hidden');
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('fieldForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn'), status = document.getElementById('statusMsg');
+            btn.disabled = true; btn.innerText = "⏳ Đang gửi...";
+            status.classList.remove('hidden'); status.className = "text-center text-sm font-semibold mt-2 text-red-600";
+            status.innerText = "Đang nén ảnh và lưu...";
+
+            const noiDungTongHop = 
+                `- Kiểu phong hóa: ${document.getElementById('kieuPhongHoa').value}\n` +
+                `- Đới Laterit: ${document.getElementById('doi1').value}\n` +
+                `- Đới Litoma: ${document.getElementById('doi2').value}\n` +
+                `- Đới Saprolit: ${document.getElementById('doi3').value}\n` +
+                `- Ý nghĩa tài nguyên: ${document.getElementById('taiNguyen').value}`;
+
+            const payload = {
+                action: "save_thudia_longhai",
+                phieuSo: "Phiếu 04: Vỏ Phong Hóa",
+                nhom: document.getElementById('nhom').value,
+                nguoiGhi: document.getElementById('nguoiGhi').value,
+                gps: document.getElementById('gps').value,
+                noiDungKhaoSat: noiDungTongHop,
+                imageBase64: base64Image,
+                imageMimeType: imageMimeType,
+                imageName: "P04_Nhom_" + document.getElementById('nhom').value + "_" + new Date().getTime() + ".jpg"
+            };
+
+            fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) })
+            .then(() => {
+                btn.innerText = "✅ Gửi thành công!";
+                status.innerText = "Dữ liệu đã vào Sheet!";
+                setTimeout(() => {
+                    document.getElementById('fieldForm').reset();
+                    document.getElementById('imagePreview').classList.add('hidden');
+                    base64Image = ""; btn.disabled = false; btn.innerText = "🚀 Gửi Dữ Liệu Lên Hệ Thống"; status.classList.add('hidden');
+                }, 3000);
+            }).catch(err => {
+                btn.disabled = false; btn.innerText = "❌ Lỗi, thử lại";
+                status.className = "text-center text-sm font-semibold mt-2 text-red-600"; status.innerText = "Lỗi mạng!";
+            });
+        });
+    </script>
+</body>
+</html>
