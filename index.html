@@ -10,69 +10,87 @@
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
     <!-- HEADER -->
-    <header class="bg-white shadow-md">
-        <div class="max-w-md mx-auto flex items-center justify-between p-4">
-            <!-- Logo Trường -->
-            <div class="flex items-center space-x-2">
-                <img src="logo_truong.png" alt="Logo Trường" class="h-10">
-                <div class="text-xs">
-                    <p class="font-bold">Trường ĐH Khoa học Tự nhiên</p>
-                    <p class="text-gray-600">ĐHQG-HCM</p>
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-3 
+                    flex flex-col md:flex-row 
+                    items-center justify-between gap-3">
+
+            <!-- Logo Trường + Tên -->
+            <div class="flex items-center space-x-3 text-center md:text-left">
+                <img src="https://hcmus.edu.vn/wp-content/uploads/2023/04/Logo-chinh-e1681638380305.png" alt="Logo Trường" class="h-10 md:h-12">
+                <div class="text-xs md:text-sm leading-tight">
+                    <p class="font-bold uppercase">
+                        Trường Đại học Khoa học Tự nhiên, ĐHQG-HCM
+                    </p>
+                    <p class="text-gray-600">Khoa Địa chất</p>
                 </div>
             </div>
 
             <!-- Logo Khoa -->
             <div class="flex items-center space-x-2">
-                <img src="logo_khoa.png" alt="Logo Khoa Địa chất" class="h-10">
-                <div class="text-xs text-right">
-                    <p class="font-bold">Khoa Địa chất</p>
-                    <p class="text-gray-600">Geology Faculty</p>
-                </div>
+                <img src="https://tuyensinh.hcmus.edu.vn/wp-content/uploads/2024/12/Khoa-Dia-chat-280x280.png" alt="Logo Khoa Địa chất" class="h-10 md:h-12">
             </div>
+
         </div>
     </header>
 
     <!-- MAIN CONTENT -->
     <main class="flex-grow">
-        <div class="max-w-md mx-auto bg-white shadow-lg">
+        <div class="max-w-3xl mx-auto bg-white shadow-lg mt-4 rounded-xl overflow-hidden">
             
             <!-- Title Section -->
-            <div class="bg-blue-600 text-white p-6 rounded-b-3xl shadow-md text-center">
-                <h1 class="text-2xl font-bold uppercase">Nhật Ký Thực Địa</h1>
-                <p class="text-sm mt-2 opacity-90">Khu vực: Long Hải - Núi Minh Đạm</p>
-                <p class="text-xs mt-1">Lớp: KDC 2023 | GV: ThS. Đinh Quốc Tuấn</p>
+            <div class="bg-blue-600 text-white p-6 md:p-8 text-center">
+                <h1 class="text-xl md:text-3xl font-bold uppercase">
+                    Nhật Ký Thực Địa
+                </h1>
+                <p class="text-sm md:text-base mt-2 opacity-90">
+                    Khu vực: Long Hải - Núi Minh Đạm
+                </p>
+                <p class="text-xs md:text-sm mt-1">
+                    Lớp: KDC 2023 | GV: ThS. Đinh Quốc Tuấn
+                </p>
             </div>
 
             <!-- Content -->
-            <div class="p-6 space-y-4">
-                <h2 class="text-lg font-semibold text-gray-700 mb-4">Vui lòng chọn phiếu khảo sát:</h2>
+            <div class="p-4 md:p-6 space-y-4">
+                <h2 class="text-base md:text-lg font-semibold text-gray-700 mb-4">
+                    Vui lòng chọn phiếu khảo sát:
+                </h2>
                 
-                <a href="noidung01.html" class="block p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg shadow hover:bg-blue-100 transition">
-                    <h3 class="font-bold text-blue-700">Phiếu 01</h3>
-                    <p class="text-sm text-gray-600">Trầm Tích Đới Bờ Long Hải</p>
-                </a>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <a href="noidung01.html"
+                       class="block p-4 border-l-4 border-blue-500 bg-blue-50 rounded-lg shadow hover:bg-blue-100 transition">
+                        <h3 class="font-bold text-blue-700">Phiếu 01</h3>
+                        <p class="text-sm text-gray-600">Trầm Tích Đới Bờ Long Hải</p>
+                    </a>
 
-                <a href="noidung02.html" class="block p-4 border-l-4 border-green-500 bg-green-50 rounded-lg shadow hover:bg-green-100 transition">
-                    <h3 class="font-bold text-green-700">Phiếu 02</h3>
-                    <p class="text-sm text-gray-600">Cấu tạo Trầm tích & Động lực học</p>
-                </a>
+                    <a href="noidung02.html"
+                       class="block p-4 border-l-4 border-green-500 bg-green-50 rounded-lg shadow hover:bg-green-100 transition">
+                        <h3 class="font-bold text-green-700">Phiếu 02</h3>
+                        <p class="text-sm text-gray-600">Cấu tạo Trầm tích & Động lực học</p>
+                    </a>
 
-                <a href="noidung03.html" class="block p-4 border-l-4 border-yellow-500 bg-yellow-50 rounded-lg shadow hover:bg-yellow-100 transition">
-                    <h3 class="font-bold text-yellow-700">Phiếu 03</h3>
-                    <p class="text-sm text-gray-600">Khảo sát Dòng ven bờ (Longshore)</p>
-                </a>
+                    <a href="noidung03.html"
+                       class="block p-4 border-l-4 border-yellow-500 bg-yellow-50 rounded-lg shadow hover:bg-yellow-100 transition">
+                        <h3 class="font-bold text-yellow-700">Phiếu 03</h3>
+                        <p class="text-sm text-gray-600">Khảo sát Dòng ven bờ (Longshore)</p>
+                    </a>
 
-                <a href="noidung04.html" class="block p-4 border-l-4 border-red-500 bg-red-50 rounded-lg shadow hover:bg-red-100 transition">
-                    <h3 class="font-bold text-red-700">Phiếu 04</h3>
-                    <p class="text-sm text-gray-600">Vỏ Phong Hóa Minh Đạm</p>
-                </a>
+                    <a href="noidung04.html"
+                       class="block p-4 border-l-4 border-red-500 bg-red-50 rounded-lg shadow hover:bg-red-100 transition">
+                        <h3 class="font-bold text-red-700">Phiếu 04</h3>
+                        <p class="text-sm text-gray-600">Vỏ Phong Hóa Minh Đạm</p>
+                    </a>
+
+                </div>
             </div>
 
         </div>
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-gray-800 text-white text-center text-xs py-4 mt-6">
+    <footer class="bg-gray-800 text-white text-center text-xs md:text-sm py-4 mt-6">
         <p>
             Website được phát triển bởi giảng viên 
             <span class="font-semibold">ThS. Đinh Quốc Tuấn</span> – 
