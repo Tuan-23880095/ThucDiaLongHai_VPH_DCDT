@@ -6,87 +6,171 @@
     <title>Phiếu 02 - Cấu tạo Trầm tích & Động lực học</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen pb-10">
-    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg">
-        <div class="bg-green-600 text-white p-4 flex items-center justify-between sticky top-0 z-10">
-            <a href="index.html" class="text-white hover:text-gray-200">← Quay lại</a>
-            <h1 class="text-lg font-bold">Phiếu 02</h1>
-            <div class="w-8"></div>
+<body class="bg-gray-200 min-h-screen pb-10">
+    <div class="max-w-lg mx-auto bg-white min-h-screen shadow-xl">
+        <div class="bg-green-600 text-white p-4 flex items-center justify-between sticky top-0 z-20 shadow-md">
+            <a href="index.html" class="text-white hover:text-gray-200 font-bold">← Quay lại</a>
+            <h1 class="text-lg font-bold uppercase tracking-wide">Phiếu 02</h1>
+            <div class="w-16"></div>
         </div>
 
-        <div class="p-6">
-            <h2 class="text-xl font-bold text-center text-green-700 mb-4">CẤU TẠO TRẦM TÍCH & ĐỘNG LỰC HỌC</h2>
+        <div class="p-5">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-green-800">CẤU TẠO TRẦM TÍCH & ĐỘNG LỰC</h2>
+                <p class="text-sm text-gray-500 mt-1">Khu vực Dinh Cô (Long Hải)</p>
+            </div>
             
-            <form id="fieldForm" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Nhóm số:</label>
-                        <input type="text" id="nhom" required class="mt-1 w-full p-2 border rounded" placeholder="VD: Nhóm 1">
+            <form id="fieldForm" class="space-y-6">
+                <div class="bg-green-50 p-4 rounded-lg border border-green-200 shadow-sm">
+                    <div class="grid grid-cols-1 gap-4 mb-3">
+                        <div>
+                            <label class="block text-xs font-bold text-green-800 uppercase mb-1">Chọn Nhóm của bạn:</label>
+                            <select id="nhom" required class="w-full p-2 border border-green-300 rounded text-sm focus:ring-2 focus:ring-green-500 font-bold text-green-700" onchange="updateStudents()">
+                                <option value="">-- Bấm để chọn nhóm --</option>
+                                <option value="Nhóm 1 - Cá Vàng">Nhóm 1 - Cá Vàng</option>
+                                <option value="Nhóm 2 - Trà Tam Hảo">Nhóm 2 - Trà Tam Hảo</option>
+                                <option value="Nhóm 3 - Trai Đẹp">Nhóm 3 - Trai Đẹp</option>
+                                <option value="Nhóm 4 - Phúc Lộc Thọ">Nhóm 4 - Phúc Lộc Thọ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-green-800 uppercase mb-1">Người ghi chép:</label>
+                            <select id="nguoiGhi" required class="w-full p-2 border border-green-300 rounded text-sm focus:ring-2 focus:ring-green-500 disabled:bg-gray-100" disabled>
+                                <option value="">-- Vui lòng chọn nhóm trước --</option>
+                            </select>
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700">Người ghi:</label>
-                        <input type="text" id="nguoiGhi" required class="mt-1 w-full p-2 border rounded" placeholder="Họ tên">
+                        <label class="block text-xs font-bold text-green-800 uppercase mb-1">Tọa độ GPS:</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="gps" readonly class="flex-1 p-2 border border-green-300 rounded bg-gray-100 text-xs font-mono text-gray-600" placeholder="Chưa lấy tọa độ...">
+                            <button type="button" onclick="getGPS()" class="bg-green-600 text-white px-3 py-2 rounded shadow hover:bg-green-700 text-sm font-bold transition">📍 Lấy GPS</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-50 p-3 rounded border">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tọa độ GPS:</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="gps" readonly class="flex-1 p-2 border rounded bg-gray-100 text-sm" placeholder="Nhấn nút lấy tọa độ...">
-                        <button type="button" onclick="getGPS()" class="bg-green-600 text-white px-3 py-2 rounded shadow hover:bg-green-700 text-sm">📍 Lấy</button>
+                <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                    <div class="bg-gray-100 p-3 border-b border-gray-300">
+                        <h3 class="font-bold text-gray-800 text-sm">PHẦN 1: TÌM KIẾM & ĐO ĐẠC GỢN SÓNG</h3>
+                        <p class="text-xs text-gray-500 mt-1 italic">Dùng thước cắm xuống cát đo khoảng cách các nếp nhăn</p>
+                    </div>
+                    <div class="p-4 space-y-4">
+                        <div>
+                            <p class="font-bold text-sm text-gray-800 mb-2">1. Trạng thái bề mặt:</p>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2"><input type="radio" name="trangThai" value="Ngập nước nông" required> <span class="text-sm">Ngập nước nông</span></label>
+                                <label class="flex items-center gap-2"><input type="radio" name="trangThai" value="Bề mặt cát ướt" required> <span class="text-sm">Bề mặt cát ướt (Nước vừa rút)</span></label>
+                                <label class="flex items-center gap-2"><input type="radio" name="trangThai" value="Bề mặt cát khô" required> <span class="text-sm">Bề mặt cát khô (Trên bãi cao)</span></label>
+                            </div>
+                        </div>
+                        
+                        <hr class="border-gray-200">
+                        
+                        <div>
+                            <p class="font-bold text-sm text-gray-800 mb-2">2. Đo đạc kích thước (Đo 3 gợn liên tiếp, lấy TB):</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700">Bước sóng L (cm):</label>
+                                    <input type="number" step="0.1" id="buocSong" oninput="calcRI()" required class="mt-1 w-full p-2 border rounded border-gray-300" placeholder="Đỉnh tới đỉnh">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700">Biên độ H (cm):</label>
+                                    <input type="number" step="0.1" id="bienDo" oninput="calcRI()" required class="mt-1 w-full p-2 border rounded border-gray-300" placeholder="Đáy rãnh lên đỉnh">
+                                </div>
+                            </div>
+                            <div class="mt-3 bg-blue-50 p-2 rounded border border-blue-200 text-sm flex justify-between items-center">
+                                <span class="font-bold text-blue-800">Chỉ số Ripple Index (RI = L/H):</span>
+                                <span id="riValue" class="font-bold text-red-600 text-lg">0.0</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1 italic">(Gợi ý: RI < 15 thường do sóng, RI > 15 thường do dòng chảy)</p>
+                        </div>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700">1. Trạng thái bề mặt gợn sóng:</label>
-                    <select id="trangThai" class="mt-1 w-full p-2 border rounded">
-                        <option value="Ngập nước nông">Ngập nước nông</option>
-                        <option value="Cát ướt (nước vừa rút)">Cát ướt (nước vừa rút)</option>
-                        <option value="Cát khô (trên bãi cao)">Cát khô (trên bãi cao)</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Bước sóng L (cm):</label>
-                        <input type="number" step="0.1" id="buocSong" required class="mt-1 w-full p-2 border rounded">
+                <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                    <div class="bg-gray-100 p-3 border-b border-gray-300">
+                        <h3 class="font-bold text-gray-800 text-sm">PHẦN 2: NHẬN DIỆN HÌNH THÁI GỢN SÓNG</h3>
                     </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Biên độ H (cm):</label>
-                        <input type="number" step="0.1" id="bienDo" required class="mt-1 w-full p-2 border rounded">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Góc phương vị (độ):</label>
-                        <input type="number" id="gocPhuongVi" class="mt-1 w-full p-2 border rounded">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Loại dòng chảy:</label>
-                        <select id="loaiDongChay" class="mt-1 w-full p-2 border rounded text-sm">
-                            <option value="Dòng ven bờ">Dòng ven bờ</option>
-                            <option value="Dòng triều rút">Dòng triều rút</option>
-                            <option value="Dòng triều lên">Dòng triều lên</option>
-                        </select>
+                    <div class="p-4 space-y-3">
+                        <label class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer border border-transparent hover:border-gray-200 transition">
+                            <input type="radio" name="hinhThai" value="Gợn sóng đối xứng" required class="mt-1 w-4 h-4 text-green-600">
+                            <span class="text-sm text-gray-700">
+                                <strong class="text-black">Gợn sóng đối xứng (Symmetrical):</strong> Đỉnh nhọn, hai sườn dốc đều nhau.<br>
+                                <i class="text-xs text-gray-500">(Nguyên nhân: Do sóng biển xô tiến/lùi tạo ra).</i>
+                            </span>
+                        </label>
+                        <label class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer border border-transparent hover:border-gray-200 transition">
+                            <input type="radio" name="hinhThai" value="Gợn sóng không đối xứng" class="mt-1 w-4 h-4 text-green-600">
+                            <span class="text-sm text-gray-700">
+                                <strong class="text-black">Gợn sóng không đối xứng (Asymmetrical):</strong> Một sườn thoải (stoss) và một sườn dốc (lee).<br>
+                                <i class="text-xs text-gray-500">(Nguyên nhân: Do dòng chảy 1 chiều tạo ra - dòng ven bờ / triều rút).</i>
+                            </span>
+                        </label>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700">Đánh giá tổng hợp Động lực:</label>
-                    <textarea id="danhGia" rows="3" required class="mt-1 w-full p-2 border rounded" placeholder="Động lực sóng hay dòng chảy? Năng lượng mạnh hay yếu?..."></textarea>
+                <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                    <div class="bg-gray-100 p-3 border-b border-gray-300">
+                        <h3 class="font-bold text-gray-800 text-sm">PHẦN 3: ĐO HƯỚNG DÒNG CHẢY (LA BÀN)</h3>
+                        <p class="text-xs text-gray-500 mt-1 italic">Dành cho gợn sóng không đối xứng: Đặt la bàn từ sườn thoải xuống sườn dốc</p>
+                    </div>
+                    <div class="p-4 space-y-4 text-sm">
+                        <div>
+                            <label class="block font-bold text-gray-800 mb-1">Góc phương vị La bàn (Azimuth):</label>
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="gocPhuongVi" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-green-500" placeholder="Ví dụ: 135">
+                                <span class="font-bold text-gray-600">Độ</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block font-bold text-gray-800 mb-1">Kết luận hướng nước chảy:</label>
+                            <div class="flex items-center gap-2">
+                                <span>Từ hướng</span>
+                                <input type="text" id="huongTu" class="w-1/2 p-2 border border-gray-300 rounded" placeholder="Đông Bắc...">
+                                <span>sang</span>
+                                <input type="text" id="huongSang" class="w-1/2 p-2 border border-gray-300 rounded" placeholder="Tây Nam...">
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="font-bold text-gray-800 mb-2">Loại dòng chảy dự đoán:</p>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2"><input type="radio" name="loaiDongChay" value="Dòng ven bờ (Longshore)"> Dòng ven bờ (Longshore)</label>
+                                <label class="flex items-center gap-2"><input type="radio" name="loaiDongChay" value="Dòng triều rút (Ebb)"> Dòng triều rút (Ebb)</label>
+                                <label class="flex items-center gap-2"><input type="radio" name="loaiDongChay" value="Dòng triều lên (Flood)"> Dòng triều lên (Flood)</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-green-50 p-3 rounded border border-green-200">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">📸 Chụp ảnh mặt cắt / gợn sóng:</label>
-                    <input type="file" id="imageInput" accept="image/*" capture="environment" class="w-full text-sm">
-                    <img id="imagePreview" class="mt-3 rounded hidden max-h-48 mx-auto" />
+                <div class="border border-green-300 rounded-lg overflow-hidden shadow-sm bg-green-50">
+                    <div class="bg-green-100 p-3 border-b border-green-300">
+                        <h3 class="font-bold text-green-800 text-sm">PHẦN 4: ĐÁNH GIÁ TỔNG HỢP & BẢN VẼ</h3>
+                    </div>
+                    <div class="p-4 space-y-4">
+                        <div>
+                            <label class="block font-bold text-sm text-gray-800 mb-1">Đánh giá chung về Động lực / Năng lượng:</label>
+                            <textarea id="danhGia" rows="4" required class="w-full p-2 border border-green-300 rounded text-sm focus:ring-2 focus:ring-green-500" placeholder="Khu vực này chịu tác động chủ yếu của Sóng hay Dòng chảy? Năng lượng mạnh hay yếu?..."></textarea>
+                        </div>
+
+                        <div class="bg-white p-3 rounded border border-dashed border-green-400 text-center">
+                            <label class="block text-sm font-bold text-green-700 mb-2 cursor-pointer">
+                                📸 Chụp bản vẽ Mặt cắt (Đỉnh, Rãnh, Sườn thoải, Sườn dốc, Hướng dòng chảy)
+                                <input type="file" id="imageInput" accept="image/*" capture="environment" required class="hidden">
+                                <div class="mt-2 inline-block bg-green-100 text-green-800 px-4 py-2 rounded shadow-sm hover:bg-green-200 transition">
+                                    Bấm vào đây để mở Camera
+                                </div>
+                            </label>
+                            <img id="imagePreview" class="mt-3 rounded hidden max-h-48 mx-auto shadow-md border border-gray-200" />
+                        </div>
+                    </div>
                 </div>
 
-                <button type="submit" id="submitBtn" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-green-700 transition mt-6">
-                    🚀 Gửi Dữ Liệu Lên Hệ Thống
+                <button type="submit" id="submitBtn" class="w-full bg-green-600 text-white font-bold text-lg py-4 rounded-xl shadow-lg hover:bg-green-700 transition transform hover:-translate-y-1">
+                    🚀 GỬI PHIẾU KHẢO SÁT
                 </button>
-                <p id="statusMsg" class="text-center text-sm font-semibold mt-2 hidden"></p>
+                <p id="statusMsg" class="text-center text-sm font-bold mt-2 hidden"></p>
             </form>
         </div>
     </div>
@@ -94,18 +178,99 @@
     <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        // !!! THAY LINK CỦA BẠN VÀO ĐÂY !!!
-        const SCRIPT_URL = "https://script.google.com/macros/library/d/1rWXBGFiD3F3oHHJ_imPJlm2oux3wWIldH6ENgEHZodnPBtTLFeixdj68/12";
+        // !!! THAY LINK APP SCRIPT CỦA THẦY/CÔ VÀO ĐÂY !!!
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhzcVBWIZDFrx_a-HZNdQfVCOi_IYHok-nItZz2FTon2bkMMtI4g67BcQrA1JDI2jiGQ/exec";
 
+        // Dữ liệu danh sách lớp chia theo nhóm
+        const studentData = {
+            "Nhóm 1 - Cá Vàng": [
+                "Lâm Yến Nhi (NT)", 
+                "Nguyễn Lê Thảo Tiên", 
+                "Phùng Thị Trúc Đào", 
+                "Trần Thị Như Hảo"
+            ],
+            "Nhóm 2 - Trà Tam Hảo": [
+                "Nguyễn Thị Thanh Thảo (NT)", 
+                "Đỗ Nguyễn Xuân Thanh", 
+                "Lý Ngọc Tường Vân"
+            ],
+            "Nhóm 3 - Trai Đẹp": [
+                "Vũ Đình Khoa (NT)", 
+                "Nguyễn Minh Chí", 
+                "Phạm Gia Phong", 
+                "Võ Trần Tiến Huy"
+            ],
+            "Nhóm 4 - Phúc Lộc Thọ": [
+                "Dương Quỳnh Anh (NT)", 
+                "Nguyễn Hữu Hoàn", 
+                "Vũ Hoàng Anh Thư"
+            ]
+        };
+
+        // Cập nhật dropdown sinh viên khi chọn nhóm
+        function updateStudents() {
+            const nhomSelect = document.getElementById("nhom");
+            const nguoiGhiSelect = document.getElementById("nguoiGhi");
+            const selectedNhom = nhomSelect.value;
+
+            nguoiGhiSelect.innerHTML = ""; // Xóa danh sách cũ
+
+            if (selectedNhom && studentData[selectedNhom]) {
+                nguoiGhiSelect.disabled = false;
+                
+                let defaultOption = document.createElement("option");
+                defaultOption.text = "-- Chọn tên của bạn --";
+                defaultOption.value = "";
+                nguoiGhiSelect.add(defaultOption);
+
+                studentData[selectedNhom].forEach(name => {
+                    let option = document.createElement("option");
+                    option.text = name;
+                    option.value = name;
+                    nguoiGhiSelect.add(option);
+                });
+            } else {
+                nguoiGhiSelect.disabled = true;
+                let option = document.createElement("option");
+                option.text = "-- Vui lòng chọn nhóm trước --";
+                nguoiGhiSelect.add(option);
+            }
+        }
+
+        // Hàm tính Ripple Index
+        function calcRI() {
+            let L = parseFloat(document.getElementById('buocSong').value);
+            let H = parseFloat(document.getElementById('bienDo').value);
+            let RI = document.getElementById('riValue');
+            
+            if (L > 0 && H > 0) {
+                let val = (L / H).toFixed(2);
+                RI.innerText = val;
+                // Đổi màu cảnh báo sóng hay dòng chảy
+                if (val < 15) { RI.className = "font-bold text-blue-600 text-lg"; } 
+                else { RI.className = "font-bold text-red-600 text-lg"; }
+            } else {
+                RI.innerText = "0.0";
+                RI.className = "font-bold text-red-600 text-lg";
+            }
+        }
+
+        // Lấy GPS
         function getGPS() {
             const gpsInput = document.getElementById('gps');
             gpsInput.value = "Đang lấy...";
-            navigator.geolocation ? navigator.geolocation.getCurrentPosition(
-                pos => gpsInput.value = `X:${pos.coords.longitude.toFixed(5)}, Y:${pos.coords.latitude.toFixed(5)}`,
-                err => { gpsInput.value = "Lỗi GPS"; alert("Vui lòng bật GPS!"); }
-            ) : gpsInput.value = "Không hỗ trợ GPS";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => gpsInput.value = `X:${pos.coords.longitude.toFixed(5)}, Y:${pos.coords.latitude.toFixed(5)}`,
+                    err => { gpsInput.value = "Lỗi GPS"; alert("Vui lòng cấp quyền định vị!"); },
+                    { enableHighAccuracy: true, timeout: 10000 }
+                );
+            } else {
+                gpsInput.value = "Không hỗ trợ GPS";
+            }
         }
 
+        // Xử lý nén và preview ảnh
         let base64Image = "", imageMimeType = "";
         document.getElementById('imageInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -116,32 +281,51 @@
                 img.onload = function() {
                     const canvas = document.getElementById('canvas');
                     const ctx = canvas.getContext('2d');
-                    const scaleSize = 1000 / img.width;
-                    canvas.width = 1000; canvas.height = img.height * scaleSize;
+                    const MAX_WIDTH = 1200; 
+                    let scaleSize = 1;
+                    if (img.width > MAX_WIDTH) { scaleSize = MAX_WIDTH / img.width; }
+                    canvas.width = img.width * scaleSize; 
+                    canvas.height = img.height * scaleSize;
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
                     base64Image = canvas.toDataURL("image/jpeg", 0.7);
                     imageMimeType = "image/jpeg";
-                    document.getElementById('imagePreview').src = base64Image;
-                    document.getElementById('imagePreview').classList.remove('hidden');
+                    
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = base64Image;
+                    preview.classList.remove('hidden');
                 };
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
         });
 
+        // Gửi Form
         document.getElementById('fieldForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn'), status = document.getElementById('statusMsg');
-            btn.disabled = true; btn.innerText = "⏳ Đang gửi...";
-            status.classList.remove('hidden'); status.className = "text-center text-sm font-semibold mt-2 text-green-600";
-            status.innerText = "Đang nén ảnh và lưu...";
+            
+            const btn = document.getElementById('submitBtn');
+            const status = document.getElementById('statusMsg');
+            btn.disabled = true; btn.innerText = "⏳ ĐANG XỬ LÝ VÀ GỬI...";
+            status.classList.remove('hidden'); status.className = "text-center text-sm font-bold mt-2 text-green-600";
+            status.innerText = "Hệ thống đang nén ảnh và tải lên Drive. Vui lòng giữ màn hình sáng...";
 
-            // Gom dữ liệu chuyên môn thành 1 đoạn text
+            const getRadioVal = (name) => {
+                const el = document.querySelector(`input[name="${name}"]:checked`);
+                return el ? el.value : "Chưa chọn";
+            };
+
+            const loaiDongChay = getRadioVal("loaiDongChay") !== "Chưa chọn" ? getRadioVal("loaiDongChay") : "Không xác định";
+            const gocPhuongVi = document.getElementById("gocPhuongVi").value || "---";
+            const huongTu = document.getElementById("huongTu").value || "...";
+            const huongSang = document.getElementById("huongSang").value || "...";
+
+            // Gom toàn bộ nội dung
             const noiDungTongHop = 
-                `- Trạng thái bề mặt: ${document.getElementById('trangThai').value}\n` +
-                `- Bước sóng L: ${document.getElementById('buocSong').value} cm | Biên độ H: ${document.getElementById('bienDo').value} cm\n` +
-                `- Góc phương vị: ${document.getElementById('gocPhuongVi').value} độ (${document.getElementById('loaiDongChay').value})\n` +
-                `- Đánh giá: ${document.getElementById('danhGia').value}`;
+                `[PHẦN 1]: Bề mặt: ${getRadioVal("trangThai")}. Kích thước: L = ${document.getElementById("buocSong").value}cm, H = ${document.getElementById("bienDo").value}cm => RI = ${document.getElementById("riValue").innerText}\n` +
+                `[PHẦN 2]: Hình thái: ${getRadioVal("hinhThai")}\n` +
+                `[PHẦN 3]: Dòng chảy: Phương vị ${gocPhuongVi} độ (Từ ${huongTu} sang ${huongSang}). Loại dự đoán: ${loaiDongChay}\n` +
+                `[PHẦN 4]: Đánh giá: ${document.getElementById("danhGia").value}`;
 
             const payload = {
                 action: "save_thudia_longhai",
@@ -152,21 +336,34 @@
                 noiDungKhaoSat: noiDungTongHop,
                 imageBase64: base64Image,
                 imageMimeType: imageMimeType,
-                imageName: "P02_Nhom_" + document.getElementById('nhom').value + "_" + new Date().getTime() + ".jpg"
+                // Lấy tên nhóm ngắn gọn ghép vào tên file ảnh
+                imageName: "P02_" + document.getElementById('nhom').value.substring(0,6).replace(" ", "") + "_" + new Date().getTime() + ".jpg"
             };
 
-            fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) })
-            .then(() => {
-                btn.innerText = "✅ Gửi thành công!";
-                status.innerText = "Dữ liệu đã vào Sheet!";
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                btn.innerText = "✅ THÀNH CÔNG!";
+                status.innerText = "Dữ liệu đã được nạp an toàn vào hệ thống!";
+                
                 setTimeout(() => {
                     document.getElementById('fieldForm').reset();
                     document.getElementById('imagePreview').classList.add('hidden');
-                    base64Image = ""; btn.disabled = false; btn.innerText = "🚀 Gửi Dữ Liệu Lên Hệ Thống"; status.classList.add('hidden');
-                }, 3000);
-            }).catch(err => {
-                btn.disabled = false; btn.innerText = "❌ Lỗi, thử lại";
-                status.className = "text-center text-sm font-semibold mt-2 text-red-600"; status.innerText = "Lỗi mạng!";
+                    document.getElementById('riValue').innerText = "0.0";
+                    document.getElementById('nguoiGhi').innerHTML = '<option value="">-- Vui lòng chọn nhóm trước --</option>';
+                    document.getElementById('nguoiGhi').disabled = true;
+                    base64Image = ""; btn.disabled = false; 
+                    btn.innerText = "🚀 GỬI PHIẾU KHẢO SÁT";
+                    status.classList.add('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 3500);
+            }).catch(error => {
+                btn.disabled = false; btn.innerText = "❌ LỖI MẠNG, THỬ LẠI";
+                status.className = "text-center text-sm font-bold mt-2 text-red-600";
+                status.innerText = "Vui lòng kiểm tra sóng 4G và bấm Gửi lại!";
             });
         });
     </script>
