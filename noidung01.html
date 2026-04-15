@@ -6,108 +6,215 @@
     <title>Phiếu 01 - Trầm Tích Đới Bờ</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen pb-10">
-    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg">
-        <div class="bg-blue-600 text-white p-4 flex items-center justify-between sticky top-0 z-10">
-            <a href="index.html" class="text-white hover:text-gray-200">← Quay lại</a>
-            <h1 class="text-lg font-bold">Phiếu 01</h1>
-            <div class="w-8"></div>
+<body class="bg-gray-200 min-h-screen pb-10">
+    <div class="max-w-lg mx-auto bg-white min-h-screen shadow-xl">
+        <!-- Header -->
+        <div class="bg-blue-600 text-white p-4 flex items-center justify-between sticky top-0 z-20 shadow-md">
+            <a href="index.html" class="text-white hover:text-gray-200 font-bold">← Quay lại</a>
+            <h1 class="text-lg font-bold uppercase tracking-wide">Phiếu 01</h1>
+            <div class="w-16"></div>
         </div>
 
-        <div class="p-6">
-            <h2 class="text-xl font-bold text-center text-blue-700 mb-4">TRẦM TÍCH ĐỚI BỜ</h2>
+        <div class="p-5">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-blue-800">TRẦM TÍCH ĐỚI BỜ</h2>
+                <p class="text-sm text-gray-500 mt-1">Bãi biển trung tâm Long Hải</p>
+            </div>
             
-            <form id="fieldForm" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700">Nhóm số:</label>
-                        <input type="text" id="nhom" required class="mt-1 w-full p-2 border rounded" placeholder="VD: Nhóm 1">
+            <form id="fieldForm" class="space-y-6">
+                <!-- THÔNG TIN CHUNG -->
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 shadow-sm">
+                    <div class="grid grid-cols-2 gap-4 mb-3">
+                        <div>
+                            <label class="block text-xs font-bold text-blue-800 uppercase mb-1">Nhóm số:</label>
+                            <input type="text" id="nhom" required class="w-full p-2 border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500" placeholder="VD: Nhóm 1">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-blue-800 uppercase mb-1">Người ghi:</label>
+                            <input type="text" id="nguoiGhi" required class="w-full p-2 border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500" placeholder="Họ tên">
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700">Người ghi:</label>
-                        <input type="text" id="nguoiGhi" required class="mt-1 w-full p-2 border rounded" placeholder="Họ tên">
+                        <label class="block text-xs font-bold text-blue-800 uppercase mb-1">Tọa độ GPS:</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="gps" readonly class="flex-1 p-2 border border-blue-300 rounded bg-gray-100 text-xs font-mono text-gray-600" placeholder="Chưa lấy tọa độ...">
+                            <button type="button" onclick="getGPS()" class="bg-blue-600 text-white px-3 py-2 rounded shadow hover:bg-blue-700 text-sm font-bold transition">📍 Lấy GPS</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-gray-50 p-3 rounded border">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tọa độ GPS:</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="gps" readonly class="flex-1 p-2 border rounded bg-gray-100 text-sm" placeholder="Nhấn nút lấy tọa độ...">
-                        <button type="button" onclick="getGPS()" class="bg-green-600 text-white px-3 py-2 rounded shadow hover:bg-green-700 text-sm">📍 Lấy</button>
+                <!-- PHẦN 1: PHÂN ĐỚI -->
+                <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                    <div class="bg-gray-100 p-3 border-b border-gray-300">
+                        <h3 class="font-bold text-gray-800 text-sm">PHẦN 1: KHOANH VÙNG & NHẬN DIỆN PHÂN ĐỚI</h3>
+                        <p class="text-xs text-gray-500 mt-1 italic">Đánh dấu vào vị trí đang đứng lấy mẫu</p>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <label class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer border border-transparent hover:border-gray-200 transition">
+                            <input type="radio" name="phanDoi" value="Đới sóng vỗ bờ" required class="mt-1 w-4 h-4 text-blue-600">
+                            <span class="text-sm text-gray-700">
+                                <strong class="text-black">Đới sóng vỗ bờ (Swash Zone):</strong> Khu vực ướt sũng, sóng xô lên và rút xuống liên tục, mặt cát phẳng và nén chặt.
+                            </span>
+                        </label>
+                        <label class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer border border-transparent hover:border-gray-200 transition">
+                            <input type="radio" name="phanDoi" value="Thềm đê cát" class="mt-1 w-4 h-4 text-blue-600">
+                            <span class="text-sm text-gray-700">
+                                <strong class="text-black">Thềm đê cát (Berm):</strong> Gờ cát nhô cao lên, đánh dấu giới hạn cao nhất của sóng vỗ lúc triều bình thường, mặt cát ráo nước, xốp.
+                            </span>
+                        </label>
+                        <label class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer border border-transparent hover:border-gray-200 transition">
+                            <input type="radio" name="phanDoi" value="Đê cát gió" class="mt-1 w-4 h-4 text-blue-600">
+                            <span class="text-sm text-gray-700">
+                                <strong class="text-black">Đê cát gió (Dune):</strong> Bãi cát cao trên bờ, khô ráo, có thực vật ven biển mọc rải rác.
+                            </span>
+                        </label>
+                        <input type="text" id="ghiChuPhanDoi" class="w-full mt-2 p-2 border border-gray-300 rounded text-sm" placeholder="Ghi chú thêm (Có vỏ sò, ốc, sỏi không?)...">
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700">Ghi chú phân đới (Kích thước hạt, độ mài tròn...):</label>
-                    <textarea id="noiDungKhaoSat" rows="4" required class="mt-1 w-full p-2 border rounded" placeholder="Ghi nhận dấu hiệu đới sóng vỗ, thềm đê cát..."></textarea>
+                <!-- PHẦN 2: KIẾN TRÚC HẠT (MICRO) -->
+                <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
+                    <div class="bg-gray-100 p-3 border-b border-gray-300">
+                        <h3 class="font-bold text-gray-800 text-sm">PHẦN 2: QUAN SÁT KIẾN TRÚC HẠT CÁT (MICRO)</h3>
+                        <p class="text-xs text-gray-500 mt-1 italic">Trải 1 nhúm cát lên lòng bàn tay, dùng kính lúp quan sát</p>
+                    </div>
+                    <div class="p-4 space-y-5">
+                        
+                        <!-- Màu sắc -->
+                        <div>
+                            <p class="font-bold text-sm text-gray-800 mb-2">1. Màu sắc chủ đạo (Thành phần khoáng vật):</p>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2"><input type="radio" name="mauSac" value="Màu sáng" required> <span class="text-sm">Màu sáng (Nhiều Thạch anh / Vỏ sò mảnh)</span></label>
+                                <label class="flex items-center gap-2"><input type="radio" name="mauSac" value="Màu sẫm" required> <span class="text-sm">Màu sẫm (Nhiều khoáng vật nặng: Ilmenit, Magnetit...)</span></label>
+                                <label class="flex items-center gap-2"><input type="radio" name="mauSac" value="Hỗn hợp" required> <span class="text-sm">Hỗn hợp (Muối tiêu)</span></label>
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-200">
+
+                        <!-- Độ chọn lọc -->
+                        <div>
+                            <p class="font-bold text-sm text-gray-800 mb-2">2. Độ chọn lọc (Sorting):</p>
+                            <div class="space-y-2">
+                                <label class="flex items-start gap-2"><input type="radio" name="chonLoc" value="Chọn lọc TỐT" required class="mt-1"> <span class="text-sm"><strong>Tốt:</strong> Các hạt có kích thước rất đều nhau (Sóng đánh liên tục làm sạch hạt mịn).</span></label>
+                                <label class="flex items-start gap-2"><input type="radio" name="chonLoc" value="Chọn lọc KÉM" required class="mt-1"> <span class="text-sm"><strong>Kém:</strong> Kích thước lộn xộn, hạt to hạt nhỏ lẫn bùn sét (Bị đổ đống nhanh chóng).</span></label>
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-200">
+
+                        <!-- Kích thước -->
+                        <div>
+                            <p class="font-bold text-sm text-gray-800 mb-2">3. Kích thước hạt trung bình:</p>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                <label class="flex items-center gap-2"><input type="radio" name="kichThuoc" value="Bùn sét" required> Bùn sét (&lt; 0.06mm)</label>
+                                <label class="flex items-center gap-2"><input type="radio" name="kichThuoc" value="Cát mịn" required> Cát mịn (0.125 - 0.25mm)</label>
+                                <label class="flex items-center gap-2"><input type="radio" name="kichThuoc" value="Cát trung" required> Cát trung (0.25 - 0.5mm)</label>
+                                <label class="flex items-center gap-2"><input type="radio" name="kichThuoc" value="Cát thô" required> Cát thô (0.5 - 2mm)</label>
+                                <label class="flex items-center gap-2 col-span-2"><input type="radio" name="kichThuoc" value="Sạn sỏi" required> Sạn, Sỏi (&gt; 2mm)</label>
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-200">
+
+                        <!-- Độ mài tròn -->
+                        <div>
+                            <p class="font-bold text-sm text-gray-800 mb-2">4. Độ mài tròn (Rounding - Phản ánh quãng đường di chuyển):</p>
+                            <div class="space-y-2">
+                                <label class="flex items-start gap-2"><input type="radio" name="maiTron" value="Góc cạnh" required class="mt-1 text-blue-600"> <span class="text-sm"><strong>Góc cạnh (Angular):</strong> Hạt còn nhiều góc cạnh nhọn (Vừa mới bị phong hóa).</span></label>
+                                <label class="flex items-start gap-2"><input type="radio" name="maiTron" value="Bán góc cạnh" required class="mt-1 text-blue-600"> <span class="text-sm"><strong>Bán góc cạnh (Sub-angular):</strong> Góc nhọn đã bắt đầu mòn.</span></label>
+                                <label class="flex items-start gap-2"><input type="radio" name="maiTron" value="Bán mài tròn" required class="mt-1 text-blue-600"> <span class="text-sm"><strong>Bán mài tròn (Sub-rounded):</strong> Mòn bớt góc cạnh nhưng chưa tròn xoe.</span></label>
+                                <label class="flex items-start gap-2"><input type="radio" name="maiTron" value="Tròn tốt" required class="mt-1 text-blue-600"> <span class="text-sm"><strong>Tròn tốt (Well-rounded):</strong> Tròn nhẵn như viên bi (Vận chuyển xa, lăn lộn nhiều).</span></label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-blue-50 p-3 rounded border border-blue-200">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">📸 Chụp ảnh phác họa / Mẫu vật:</label>
-                    <input type="file" id="imageInput" accept="image/*" capture="environment" class="w-full text-sm">
-                    <img id="imagePreview" class="mt-3 rounded hidden max-h-48 mx-auto" />
+                <!-- PHẦN 3 & 4: KẾT LUẬN VÀ ẢNH CHỤP -->
+                <div class="border border-green-300 rounded-lg overflow-hidden shadow-sm bg-green-50">
+                    <div class="bg-green-100 p-3 border-b border-green-300">
+                        <h3 class="font-bold text-green-800 text-sm">PHẦN 3 & 4: NHẬN ĐỊNH VÀ MINH CHỨNG</h3>
+                    </div>
+                    <div class="p-4 space-y-4">
+                        <div>
+                            <p class="font-bold text-sm text-gray-800 mb-2">Dựa vào độ mài tròn và chọn lọc, đánh giá Năng lượng thủy động lực (Sóng):</p>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2"><input type="radio" name="nangLuong" value="Thấp" required class="text-green-600"> <span class="text-sm">Năng lượng <strong>Thấp</strong> (Yên tĩnh, bùn lắng).</span></label>
+                                <label class="flex items-center gap-2"><input type="radio" name="nangLuong" value="Trung bình" required class="text-green-600"> <span class="text-sm">Năng lượng <strong>Trung bình</strong>.</span></label>
+                                <label class="flex items-start gap-2"><input type="radio" name="nangLuong" value="Cao" required class="mt-1 text-green-600"> <span class="text-sm">Năng lượng <strong>Cao</strong> (Sóng đánh mạnh, cuốn trôi hạt mịn, để lại hạt thô).</span></label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-bold text-sm text-gray-800 mb-1">Giải thích ngắn gọn cơ chế:</label>
+                            <textarea id="giaiThich" rows="3" required class="w-full p-2 border border-green-300 rounded text-sm focus:ring-2 focus:ring-green-500" placeholder="Viết lý do nhóm em chọn mức năng lượng trên..."></textarea>
+                        </div>
+
+                        <div class="bg-white p-3 rounded border border-dashed border-green-400 text-center">
+                            <label class="block text-sm font-bold text-green-700 mb-2 cursor-pointer">
+                                📸 Chụp bản vẽ Sketch hoặc Chụp cận cảnh (Macro) mẫu qua kính lúp
+                                <input type="file" id="imageInput" accept="image/*" capture="environment" required class="hidden">
+                                <div class="mt-2 inline-block bg-green-100 text-green-800 px-4 py-2 rounded shadow-sm hover:bg-green-200 transition">
+                                    Bấm vào đây để mở Camera
+                                </div>
+                            </label>
+                            <img id="imagePreview" class="mt-3 rounded hidden max-h-48 mx-auto shadow-md border border-gray-200" />
+                        </div>
+                    </div>
                 </div>
 
-                <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-700 transition mt-6">
-                    🚀 Gửi Dữ Liệu Lên Hệ Thống
+                <!-- Nút Submit -->
+                <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white font-bold text-lg py-4 rounded-xl shadow-lg hover:bg-blue-700 transition transform hover:-translate-y-1">
+                    🚀 GỬI PHIẾU KHẢO SÁT
                 </button>
-                <p id="statusMsg" class="text-center text-sm font-semibold mt-2 hidden"></p>
+                <p id="statusMsg" class="text-center text-sm font-bold mt-2 hidden"></p>
             </form>
         </div>
     </div>
 
+    <!-- Canvas ẩn để nén ảnh -->
     <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        // !--- THAY LINK WEB APP CỦA BẠN VÀO ĐÂY ---!
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEpCJ5u9o-25Gz90VQU4BNUntIDvWyidn4ikGynGzvEsve8Yy95NY6bSU2c2rJzK8ivw/exec";
+        // !!! THAY LINK APP SCRIPT CỦA THẦY/CÔ VÀO ĐÂY !!!
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby.../exec";
 
-        // 1. Hàm lấy GPS
+        // Lấy GPS
         function getGPS() {
             const gpsInput = document.getElementById('gps');
-            gpsInput.value = "Đang lấy tọa độ...";
+            gpsInput.value = "Đang lấy...";
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    position => {
-                        gpsInput.value = `X:${position.coords.longitude.toFixed(5)}, Y:${position.coords.latitude.toFixed(5)}`;
-                    },
-                    error => {
-                        gpsInput.value = "Lỗi: Không thể lấy GPS";
-                        alert("Vui lòng cấp quyền định vị cho trình duyệt!");
-                    }
+                    pos => gpsInput.value = `X:${pos.coords.longitude.toFixed(5)}, Y:${pos.coords.latitude.toFixed(5)}`,
+                    err => { gpsInput.value = "Lỗi GPS"; alert("Vui lòng cấp quyền định vị!"); },
+                    { enableHighAccuracy: true, timeout: 10000 }
                 );
             } else {
-                gpsInput.value = "Trình duyệt không hỗ trợ GPS.";
+                gpsInput.value = "Không hỗ trợ GPS";
             }
         }
 
-        // 2. Hiển thị ảnh preview
-        let base64Image = "";
-        let imageMimeType = "";
+        // Xử lý nén và preview ảnh
+        let base64Image = "", imageMimeType = "";
         document.getElementById('imageInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(event) {
                 const img = new Image();
                 img.onload = function() {
-                    // Nén ảnh bằng Canvas để tải lên mượt mà ngoài thực địa
                     const canvas = document.getElementById('canvas');
                     const ctx = canvas.getContext('2d');
-                    
-                    const MAX_WIDTH = 1000; // Giới hạn chiều rộng
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
+                    const MAX_WIDTH = 1200; // Nén ảnh kích thước vừa phải để rõ chi tiết cát
+                    let scaleSize = 1;
+                    if (img.width > MAX_WIDTH) { scaleSize = MAX_WIDTH / img.width; }
+                    canvas.width = img.width * scaleSize; 
                     canvas.height = img.height * scaleSize;
-                    
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     
-                    // Lấy ảnh đã nén
-                    base64Image = canvas.toDataURL("image/jpeg", 0.7); // Nén chất lượng 70%
+                    base64Image = canvas.toDataURL("image/jpeg", 0.7);
                     imageMimeType = "image/jpeg";
                     
-                    // Hiện ảnh preview
                     const preview = document.getElementById('imagePreview');
                     preview.src = base64Image;
                     preview.classList.remove('hidden');
@@ -117,18 +224,27 @@
             reader.readAsDataURL(file);
         });
 
-        // 3. Gửi dữ liệu đi
+        // Gửi Form
         document.getElementById('fieldForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const btn = document.getElementById('submitBtn');
             const status = document.getElementById('statusMsg');
-            
-            btn.disabled = true;
-            btn.innerText = "⏳ Đang gửi dữ liệu...";
-            status.classList.remove('hidden');
-            status.className = "text-center text-sm font-semibold mt-2 text-blue-600";
-            status.innerText = "Đang nén ảnh và tải lên Drive...";
+            btn.disabled = true; btn.innerText = "⏳ ĐANG XỬ LÝ VÀ GỬI...";
+            status.classList.remove('hidden'); status.className = "text-center text-sm font-bold mt-2 text-blue-600";
+            status.innerText = "Hệ thống đang nén ảnh và tải lên Drive. Vui lòng giữ màn hình sáng...";
+
+            // Hàm hỗ trợ lấy giá trị của Radio button được check
+            const getRadioVal = (name) => {
+                const el = document.querySelector(`input[name="${name}"]:checked`);
+                return el ? el.value : "Chưa chọn";
+            };
+
+            // Gom toàn bộ nội dung thành 1 chuỗi Text để đưa vào Sheet
+            const noiDungTongHop = 
+                `[PHẦN 1. VỊ TRÍ]: ${getRadioVal("phanDoi")} - Ghi chú: ${document.getElementById("ghiChuPhanDoi").value || "Không có"}\n` +
+                `[PHẦN 2. KIẾN TRÚC]: Màu: ${getRadioVal("mauSac")} | Chọn lọc: ${getRadioVal("chonLoc")} | Kích thước: ${getRadioVal("kichThuoc")} | Mài tròn: ${getRadioVal("maiTron")}\n` +
+                `[PHẦN 4. ĐÁNH GIÁ]: Năng lượng ${getRadioVal("nangLuong")}. Cơ chế: ${document.getElementById("giaiThich").value}`;
 
             const payload = {
                 action: "save_thudia_longhai",
@@ -136,7 +252,7 @@
                 nhom: document.getElementById('nhom').value,
                 nguoiGhi: document.getElementById('nguoiGhi').value,
                 gps: document.getElementById('gps').value,
-                noiDungKhaoSat: document.getElementById('noiDungKhaoSat').value,
+                noiDungKhaoSat: noiDungTongHop,
                 imageBase64: base64Image,
                 imageMimeType: imageMimeType,
                 imageName: "P01_Nhom_" + document.getElementById('nhom').value + "_" + new Date().getTime() + ".jpg"
@@ -144,33 +260,28 @@
 
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Dùng no-cors cho Google Apps Script
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             }).then(() => {
-                btn.innerText = "✅ Gửi thành công!";
+                btn.innerText = "✅ THÀNH CÔNG!";
                 btn.classList.replace('bg-blue-600', 'bg-green-600');
-                status.className = "text-center text-sm font-semibold mt-2 text-green-600";
-                status.innerText = "Dữ liệu đã được lưu vào Google Sheet!";
+                status.className = "text-center text-sm font-bold mt-2 text-green-600";
+                status.innerText = "Dữ liệu đã được nạp an toàn vào hệ thống!";
                 
-                // Tự động reset form sau 3 giây
                 setTimeout(() => {
                     document.getElementById('fieldForm').reset();
                     document.getElementById('imagePreview').classList.add('hidden');
-                    base64Image = "";
-                    btn.disabled = false;
-                    btn.innerText = "🚀 Gửi Dữ Liệu Lên Hệ Thống";
+                    base64Image = ""; btn.disabled = false; 
+                    btn.innerText = "🚀 GỬI PHIẾU KHẢO SÁT";
                     btn.classList.replace('bg-green-600', 'bg-blue-600');
                     status.classList.add('hidden');
-                }, 3000);
+                    window.scrollTo({ top: 0, behavior: 'smooth' }); // Cuộn lên trên cùng để làm phiếu mới
+                }, 3500);
             }).catch(error => {
-                console.error('Error!', error.message);
-                btn.disabled = false;
-                btn.innerText = "❌ Lỗi, thử lại";
-                status.className = "text-center text-sm font-semibold mt-2 text-red-600";
-                status.innerText = "Vui lòng kiểm tra lại mạng Internet!";
+                btn.disabled = false; btn.innerText = "❌ LỖI MẠNG, THỬ LẠI";
+                status.className = "text-center text-sm font-bold mt-2 text-red-600";
+                status.innerText = "Vui lòng di chuyển đến vùng có sóng 4G và bấm Gửi lại!";
             });
         });
     </script>
