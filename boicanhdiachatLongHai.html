@@ -37,10 +37,18 @@
 <body class="antialiased min-h-screen flex flex-col">
 
     <!-- Header -->
-    <header class="bg-slate-900 text-white py-6 shadow-md z-10">
-        <div class="container mx-auto px-4 max-w-5xl">
-            <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Bối Cảnh Địa Chất Đệ Tứ Long Hải</h1>
-            <p class="text-slate-300 mt-2 text-sm md:text-base">Khám phá chu trình thạch học đới bờ: Từ kiến tạo móng đá cổ Mesozoi đến động lực học Holocen.</p>
+    <header class="bg-slate-900 text-white py-6 shadow-md z-10 relative">
+        <div class="container mx-auto px-4 max-w-5xl relative">
+            <div class="flex justify-between items-start md:items-center flex-col md:flex-row gap-4">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Bối Cảnh Địa Chất Đệ Tứ Long Hải</h1>
+                    <p class="text-slate-300 mt-2 text-sm md:text-base">Khám phá chu trình thạch học đới bờ: Từ kiến tạo móng đá cổ Mesozoi đến động lực học Holocen.</p>
+                </div>
+                <!-- Nút quay về trang chủ được thêm vào đây -->
+                <a href="index.html" class="inline-flex shrink-0 items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-sky-700 text-slate-200 hover:text-white rounded-lg transition text-sm font-medium border border-slate-700 hover:border-sky-600 shadow-sm">
+                    <span class="text-lg leading-none">&larr;</span> Quay về trang chủ
+                </a>
+            </div>
         </div>
     </header>
 
@@ -402,55 +410,69 @@
                 'nhatrang': {
                     title: 'Hệ tầng Nha Trang (Nha Trang Formation)',
                     content: `
-                        <ul class="list-disc pl-5 space-y-2">
-                            <li><strong class="text-sky-700">Tuổi:</strong> Creta muộn (Late Cretaceous).</li>
-                            <li><strong class="text-sky-700">Phân bố:</strong> Nam Trung Bộ và Đông Nam Bộ (III.2); bao gồm các tỉnh Khánh Hoà, Ninh Thuận, Bình Thuận, Lâm Đồng và Bà Rịa - Vũng Tàu.</li>
-                            <li><strong class="text-sky-700">Thành phần thạch học (300 - 650m):</strong><br>
-                                a) Anđesit (60 m)<br>
-                                b) Ryolit, ryolit phân dải (130 m)<br>
-                                c) Tuf đacit, tuf felsit (105 m)<br>
-                                d) Ryolit porphyr (65 m)<br>
-                                e) Ryolit phân dải (115 m)<br>
-                                f) Ryolit porphyr (175 m)
-                            </li>
-                            <li><strong class="text-sky-700">Quan hệ địa tầng:</strong> Nằm phủ không chỉnh hợp trên granodiorit phức hệ Định Quán (tuổi Jura muộn).</li>
-                            <li><strong class="text-sky-700">Nguồn gốc:</strong> Nguồn núi lửa, lục địa (Volcanogenic, continental).</li>
-                            <li><strong class="text-sky-700">Tác giả/Năm lập:</strong> Belouxov A. và nnk (1984), Vũ Khúc (1999).</li>
-                        </ul>`
+                        <div class="space-y-3 text-sm text-slate-700">
+                            <p class="font-medium text-slate-800">Hệ tầng Nha Trang là một phân vị địa chất quan trọng tại khu vực ven biển Nam Trung Bộ Việt Nam, nổi bật với các thành tạo đá phun trào và tufffelsic. Dưới đây là đặc điểm chi tiết:</p>
+
+                            <h4 class="font-bold text-sky-800 mt-3 border-b pb-1">1. Đặc điểm địa chất và thạch học - khoáng vật</h4>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li><strong class="text-sky-700">Thành phần thạch học:</strong> Chủ yếu bao gồm các đá phun trào trung-acid và acid, bao gồm: ryolit, ryolit porphyr, dacit, trachydacit, andesit và tuff tương ứng.</li>
+                                <li><strong class="text-sky-700">Đặc điểm cấu tạo:</strong> Đá thường bị biến đổi mạnh, xuất lộ phổ biến tại vùng ven biển Nha Trang, Khánh Hòa và quần đảo Nam Du (Hòn Lớn, Hòn Trước).</li>
+                                <li><strong class="text-sky-700">Mối quan hệ địa tầng:</strong> Thường phủ không chỉnh hợp trên các đá granit thuộc phức hệ Đèo Cả hoặc các hệ tầng cổ hơn (như hệ tầng Hòn Chông ở Nam Du).</li>
+                                <li><strong class="text-sky-700">Thành phần khoáng vật:</strong> Chủ yếu là thạch anh, plagiocla, felspat kali. Khoáng vật thứ sinh hình thành do quá trình biến đổi hậu magma khá mạnh mẽ bao gồm kaolin, sericit, clorit, epidot.</li>
+                            </ul>
+
+                            <h4 class="font-bold text-sky-800 mt-3 border-b pb-1">2. Tuổi địa chất</h4>
+                            <p>Hệ tầng Nha Trang được xác định tuổi thuộc Creta (K) trong Giới Mesozoi.</p>
+
+                            <h4 class="font-bold text-sky-800 mt-3 border-b pb-1">3. Khoáng sản đi kèm</h4>
+                            <p>Hệ tầng Nha Trang liên quan chặt chẽ với các quá trình magma phun trào và phong hoá sau đó, tạo ra các loại khoáng sản:</p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li><strong class="text-sky-700">Marsalit (Quặng cao lanh):</strong> Thành tạo trong vỏ phong hoá của đá ryolit thuộc hệ tầng này, với thành phần chủ yếu là thạch anh và kaolinit.</li>
+                                <li><strong class="text-sky-700">Vật liệu xây dựng:</strong> Đá ryolit, dacit được sử dụng làm đá ốp lát, mỹ nghệ hoặc đá xây dựng thông thường.</li>
+                                <li><strong class="text-sky-700">Tiềm năng khác:</strong> Vùng phân bố hệ tầng Nha Trang thường được đánh giá tiềm năng với các loại khoáng sản nội sinh như vàng, molybđen, wolfram, thiếc, đồng, chì-kẽm do liên quan với các đới magma phức hệ Đèo Cả.</li>
+                            </ul>
+
+                            <p class="mt-3 p-3 bg-sky-50 rounded italic border-l-4 border-sky-400 text-sky-900">Hệ tầng Nha Trang là thành phần chính tạo nên các đảo ven bờ (như Hòn Tre, Hòn Tằm) và bờ biển rocky (đá gốc) đặc trưng tại vịnh Nha Trang.</p>
+                        </div>`
                 },
                 'dinhquan': {
                     title: 'Phức hệ Định Quán (Định Quán Complex)',
                     content: `
-                        <ul class="list-disc pl-5 space-y-2">
-                            <li><strong class="text-sky-700">Tuổi:</strong> Jura muộn (Late Jurassic); K/Ar: 140 Ma.</li>
-                            <li><strong class="text-sky-700">Phân bố:</strong> Nam Trung Bộ và Đông Nam Bộ (III.2); bao gồm các tỉnh Đồng Nai, Lâm Đồng, Gia Lai, Đăk Lăk, Ninh Thuận. Nơi tiêu biểu: Thị trấn Định Quán (Tân Phú, Đồng Nai).</li>
-                            <li><strong class="text-sky-700">Thành phần thạch học:</strong><br>
-                                &bull; Pha 1: Điorit, điorit thạch anh, gabrođiorit đôi chỗ chứa pyroxen.<br>
-                                &bull; Pha 2: Granit biotit-hornblend hạt vừa, tonalit biotit-hornblend.<br>
-                                &bull; Pha 3: Granit biotit-hornblend hạt nhỏ đến vừa.<br>
-                                &bull; Đá mạch: Spesartit.
-                            </li>
-                            <li><strong class="text-sky-700">Quan hệ xuyên cắt:</strong> Xuyên cắt và gây biến chất tiếp xúc các hệ tầng La Ngà (J2) và Đèo Bảo Lộc (J3).</li>
-                            <li><strong class="text-sky-700">Kiểu Granit:</strong> Granit kiểu I (I-granite type).</li>
-                            <li><strong class="text-sky-700">Đồng nghĩa:</strong> Phức hệ Ankroet-Định Quán (một phần).</li>
-                        </ul>`
+                        <div class="space-y-2 text-sm text-slate-700">
+                            <p><strong class="text-sky-700">1. Tuổi:</strong> Jura muộn (Late Jurassic); K/Ar : 140 Ma.</p>
+                            <p><strong class="text-sky-700">2. Tác giả/Năm lập:</strong> Huỳnh Trung, Ngô Văn Khải, Phan Thiện và nnk., 1979.</p>
+                            <p><strong class="text-sky-700">3. Phân bố:</strong> Nam Trung Bộ và Đông Nam Bộ (III.2); tỉnh Đồng Nai, Lâm Đồng, Gia Lai, Đăk Lăk, Ninh Thuận.</p>
+                            <p><strong class="text-sky-700">4. Nơi tiêu biểu:</strong> Thị trấn Định Quán, Tân Phú, Đồng Nai; x = 11°10'; y = 107°22'.</p>
+                            <p><strong class="text-sky-700">5. Thành phần thạch học:</strong><br>
+                                - Pha 1: điorit, điorit thạch anh, gabrođiorit đôi chỗ chứa pyroxen.<br>
+                                - Pha 2: granit biotit-horblenđ hạt vừa, tonalit biotit-horblenđ.<br>
+                                - Pha 3: granit biotit -horblenđ hạt nhỏ đến vừa.<br>
+                                - Pha đá mạch: spesartit.</p>
+                            <p><strong class="text-sky-700">6. Quan hệ xuyên cắt:</strong> Xuyên cắt và gây biến chất tiếp xúc các Ht. La Ngà (J2) và Đèo Bảo Lộc (J3).</p>
+                            <p><strong class="text-sky-700">7. Đặc điểm:</strong> Granit kiểu I.</p>
+                            <p><strong class="text-sky-700">8. Đồng nghĩa:</strong> Phức hệ Ankroet- Định Quán (một phần): Izokh E.P., Đovjikov A.E., 1981 và Huỳnh Trung, Ngô Văn Khải, 1995.</p>
+                            <p><strong class="text-sky-700">9. Người tổng hợp:</strong> Đào Đình Thục, Phan Thiện.</p>
+                            <p><strong class="text-sky-700">10. Thời gian:</strong> 6/1998.</p>
+                        </div>`
                 },
                 'deoca': {
                     title: 'Phức hệ Đèo Cả (Đèo Cả Complex)',
                     content: `
-                        <ul class="list-disc pl-5 space-y-2">
-                            <li><strong class="text-sky-700">Tuổi:</strong> Creta (Cretaceous); K/Ar: 127 Ma; Rb/Sr: 82, 83, 87 Ma.</li>
-                            <li><strong class="text-sky-700">Phân bố:</strong> Nam Trung Bộ và Đông Nam Bộ (III.2); bao gồm các tỉnh Phú Yên, Bình Định, Gia Lai, Lâm Đồng, Bình Thuận. Nơi tiêu biểu: Đèo Cả (giữa Phú Yên và Khánh Hoà).</li>
-                            <li><strong class="text-sky-700">Thành phần thạch học:</strong><br>
-                                &bull; Pha 1: Granodiorit biotit.<br>
-                                &bull; Pha 2: Granit, granosyenit biotit (hornblend) hạt vừa đến lớn.<br>
-                                &bull; Pha 3: Granit biotit hạt nhỏ.<br>
-                                &bull; Đá mạch: Granit aplit, pegmatit.<br>
-                                <span class="text-slate-500 italic">(Đặc trưng hóa học: SiO2 = 77.06-76.54%; Na2O+K2O = 5.80-9.64%)</span>
-                            </li>
-                            <li><strong class="text-sky-700">Quan hệ xuyên cắt:</strong> Xuyên cắt đá núi lửa Hệ tầng Nha Trang (K).</li>
-                            <li><strong class="text-sky-700">Tác giả/Năm lập:</strong> Huỳnh Trung, Ngô Văn Khải và nnk (1980).</li>
-                        </ul>`
+                        <div class="space-y-2 text-sm text-slate-700">
+                            <p><strong class="text-sky-700">1. Tuổi:</strong> Creta (Cretaceous); K/Ar : 127; Rb/Sr : 82, 83, 87.</p>
+                            <p><strong class="text-sky-700">2. Tác giả/Năm lập:</strong> Huỳnh Trung, Ngô Văn Khải và nnk., 1980.</p>
+                            <p><strong class="text-sky-700">3. Phân bố:</strong> Nam Trung Bộ và Đông Nam Bộ (III.2); tỉnh Phú Yên, Bình Định, Gia Lai, Lâm Đồng, Bình Thuận.</p>
+                            <p><strong class="text-sky-700">4. Nơi tiêu biểu:</strong> Đèo Cả, giữa Phú Yên và Khánh Hoà; x = 12°50'; y = 109°15'.</p>
+                            <p><strong class="text-sky-700">5. Thành phần thạch học:</strong><br>
+                                - Pha 1: granođiorit biotit.<br>
+                                - Pha 2: granit, granosyenit biotit (horblenđ) hạt vừa-lớn.<br>
+                                - Pha 3: granit biotit hạt nhỏ.<br>
+                                - Đá mạch: granit aplit, pegmatit.<br>
+                                <span class="italic text-slate-500">(Đặc trưng hóa học: SiO2 = 77.06-76.54%; Na2O+K2O = 5.80-9.64%)</span></p>
+                            <p><strong class="text-sky-700">6. Quan hệ xuyên cắt:</strong> Xuyên cắt đá núi lửa Ht. Nha Trang (K).</p>
+                            <p><strong class="text-sky-700">9. Người tổng hợp:</strong> Đào Đình Thục, Phan Thiện.</p>
+                            <p><strong class="text-sky-700">10. Thời gian:</strong> 5/1998.</p>
+                        </div>`
                 }
             }
         };
