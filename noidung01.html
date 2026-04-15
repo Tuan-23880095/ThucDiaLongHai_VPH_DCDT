@@ -8,7 +8,6 @@
 </head>
 <body class="bg-gray-200 min-h-screen pb-10">
     <div class="max-w-lg mx-auto bg-white min-h-screen shadow-xl">
-        <!-- Header -->
         <div class="bg-blue-600 text-white p-4 flex items-center justify-between sticky top-0 z-20 shadow-md">
             <a href="index.html" class="text-white hover:text-gray-200 font-bold">← Quay lại</a>
             <h1 class="text-lg font-bold uppercase tracking-wide">Phiếu 01</h1>
@@ -22,28 +21,34 @@
             </div>
             
             <form id="fieldForm" class="space-y-6">
-                <!-- THÔNG TIN CHUNG -->
                 <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 shadow-sm">
-                    <div class="grid grid-cols-2 gap-4 mb-3">
+                    <div class="grid grid-cols-1 gap-4 mb-3">
                         <div>
-                            <label class="block text-xs font-bold text-blue-800 uppercase mb-1">Nhóm số:</label>
-                            <input type="text" id="nhom" required class="w-full p-2 border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500" placeholder="VD: Nhóm 1">
+                            <label class="block text-xs font-bold text-blue-800 uppercase mb-1">Chọn Nhóm của bạn:</label>
+                            <select id="nhom" required class="w-full p-2 border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500 font-bold text-blue-700" onchange="updateStudents()">
+                                <option value="">-- Bấm để chọn nhóm --</option>
+                                <option value="Nhóm 1 - Cá Vàng">Nhóm 1 - Cá Vàng</option>
+                                <option value="Nhóm 2 - Trà Tam Hảo">Nhóm 2 - Trà Tam Hảo</option>
+                                <option value="Nhóm 3 - Trai Đẹp">Nhóm 3 - Trai Đẹp</option>
+                                <option value="Nhóm 4 - Phúc Lộc Thọ">Nhóm 4 - Phúc Lộc Thọ</option>
+                            </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-blue-800 uppercase mb-1">Người ghi:</label>
-                            <input type="text" id="nguoiGhi" required class="w-full p-2 border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500" placeholder="Họ tên">
+                            <label class="block text-xs font-bold text-blue-800 uppercase mb-1">Người ghi chép (Tên & MSSV):</label>
+                            <select id="nguoiGhi" required class="w-full p-2 border border-blue-300 rounded text-sm focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100" disabled>
+                                <option value="">-- Vui lòng chọn nhóm trước --</option>
+                            </select>
                         </div>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-blue-800 uppercase mb-1">Tọa độ GPS:</label>
                         <div class="flex gap-2">
-                            <input type="text" id="gps" readonly class="flex-1 p-2 border border-blue-300 rounded bg-gray-100 text-xs font-mono text-gray-600" placeholder="Chưa lấy tọa độ...">
+                            <input type="text" id="gps" readonly class="flex-1 p-2 border border-blue-300 rounded bg-white text-xs font-mono text-gray-600" placeholder="Chưa lấy tọa độ...">
                             <button type="button" onclick="getGPS()" class="bg-blue-600 text-white px-3 py-2 rounded shadow hover:bg-blue-700 text-sm font-bold transition">📍 Lấy GPS</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- PHẦN 1: PHÂN ĐỚI -->
                 <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
                     <div class="bg-gray-100 p-3 border-b border-gray-300">
                         <h3 class="font-bold text-gray-800 text-sm">PHẦN 1: KHOANH VÙNG & NHẬN DIỆN PHÂN ĐỚI</h3>
@@ -72,7 +77,6 @@
                     </div>
                 </div>
 
-                <!-- PHẦN 2: KIẾN TRÚC HẠT (MICRO) -->
                 <div class="border border-gray-300 rounded-lg overflow-hidden shadow-sm">
                     <div class="bg-gray-100 p-3 border-b border-gray-300">
                         <h3 class="font-bold text-gray-800 text-sm">PHẦN 2: QUAN SÁT KIẾN TRÚC HẠT CÁT (MICRO)</h3>
@@ -80,7 +84,6 @@
                     </div>
                     <div class="p-4 space-y-5">
                         
-                        <!-- Màu sắc -->
                         <div>
                             <p class="font-bold text-sm text-gray-800 mb-2">1. Màu sắc chủ đạo (Thành phần khoáng vật):</p>
                             <div class="space-y-2">
@@ -92,7 +95,6 @@
 
                         <hr class="border-gray-200">
 
-                        <!-- Độ chọn lọc -->
                         <div>
                             <p class="font-bold text-sm text-gray-800 mb-2">2. Độ chọn lọc (Sorting):</p>
                             <div class="space-y-2">
@@ -103,7 +105,6 @@
 
                         <hr class="border-gray-200">
 
-                        <!-- Kích thước -->
                         <div>
                             <p class="font-bold text-sm text-gray-800 mb-2">3. Kích thước hạt trung bình:</p>
                             <div class="grid grid-cols-2 gap-2 text-sm">
@@ -117,7 +118,6 @@
 
                         <hr class="border-gray-200">
 
-                        <!-- Độ mài tròn -->
                         <div>
                             <p class="font-bold text-sm text-gray-800 mb-2">4. Độ mài tròn (Rounding - Phản ánh quãng đường di chuyển):</p>
                             <div class="space-y-2">
@@ -130,7 +130,6 @@
                     </div>
                 </div>
 
-                <!-- PHẦN 3 & 4: KẾT LUẬN VÀ ẢNH CHỤP -->
                 <div class="border border-green-300 rounded-lg overflow-hidden shadow-sm bg-green-50">
                     <div class="bg-green-100 p-3 border-b border-green-300">
                         <h3 class="font-bold text-green-800 text-sm">PHẦN 3 & 4: NHẬN ĐỊNH VÀ MINH CHỨNG</h3>
@@ -163,7 +162,6 @@
                     </div>
                 </div>
 
-                <!-- Nút Submit -->
                 <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white font-bold text-lg py-4 rounded-xl shadow-lg hover:bg-blue-700 transition transform hover:-translate-y-1">
                     🚀 GỬI PHIẾU KHẢO SÁT
                 </button>
@@ -172,12 +170,66 @@
         </div>
     </div>
 
-    <!-- Canvas ẩn để nén ảnh -->
     <canvas id="canvas" style="display:none;"></canvas>
 
     <script>
-        // !!! THAY LINK APP SCRIPT CỦA THẦY/CÔ VÀO ĐÂY !!!
+        // LINK APP SCRIPT CỦA THẦY/CÔ
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwhzcVBWIZDFrx_a-HZNdQfVCOi_IYHok-nItZz2FTon2bkMMtI4g67BcQrA1JDI2jiGQ/exec";
+
+        // Dữ liệu danh sách lớp chia theo nhóm (Kèm MSSV)
+        const studentData = {
+            "Nhóm 1 - Cá Vàng": [
+                "23160019 - Lâm Yến Nhi (NT)", 
+                "23160007 - Nguyễn Lê Thảo Tiên", 
+                "23160011 - Phùng Thị Trúc Đào", 
+                "23160002 - Trần Thị Như Hảo"
+            ],
+            "Nhóm 2 - Trà Tam Hảo": [
+                "23160022 - Nguyễn Thị Thanh Thảo (NT)", 
+                "23160004 - Đỗ Nguyễn Xuân Thanh", 
+                "23160006 - Lý Ngọc Tường Vân"
+            ],
+            "Nhóm 3 - Trai Đẹp": [
+                "23160016 - Vũ Đình Khoa (NT)", 
+                "23160009 - Nguyễn Minh Chí", 
+                "23160020 - Phạm Gia Phong", 
+                "23160015 - Võ Trần Tiến Huy"
+            ],
+            "Nhóm 4 - Phúc Lộc Thọ": [
+                "23160008 - Dương Quỳnh Anh (NT)", 
+                "23160012 - Nguyễn Hữu Hoàn", 
+                "23160024 - Vũ Hoàng Anh Thư"
+            ]
+        };
+
+        // Cập nhật dropdown sinh viên khi chọn nhóm
+        function updateStudents() {
+            const nhomSelect = document.getElementById("nhom");
+            const nguoiGhiSelect = document.getElementById("nguoiGhi");
+            const selectedNhom = nhomSelect.value;
+
+            nguoiGhiSelect.innerHTML = ""; 
+
+            if (selectedNhom && studentData[selectedNhom]) {
+                nguoiGhiSelect.disabled = false;
+                let defaultOption = document.createElement("option");
+                defaultOption.text = "-- Chọn MSSV & Tên của bạn --";
+                defaultOption.value = "";
+                nguoiGhiSelect.add(defaultOption);
+
+                studentData[selectedNhom].forEach(name => {
+                    let option = document.createElement("option");
+                    option.text = name;
+                    option.value = name;
+                    nguoiGhiSelect.add(option);
+                });
+            } else {
+                nguoiGhiSelect.disabled = true;
+                let option = document.createElement("option");
+                option.text = "-- Vui lòng chọn nhóm trước --";
+                nguoiGhiSelect.add(option);
+            }
+        }
 
         // Lấy GPS
         function getGPS() {
@@ -255,7 +307,8 @@
                 noiDungKhaoSat: noiDungTongHop,
                 imageBase64: base64Image,
                 imageMimeType: imageMimeType,
-                imageName: "P01_Nhom_" + document.getElementById('nhom').value + "_" + new Date().getTime() + ".jpg"
+                // Rút gọn tên nhóm để làm tên file ảnh
+                imageName: "P01_" + document.getElementById('nhom').value.substring(0,6).replace(" ", "") + "_" + new Date().getTime() + ".jpg"
             };
 
             fetch(SCRIPT_URL, {
@@ -272,6 +325,8 @@
                 setTimeout(() => {
                     document.getElementById('fieldForm').reset();
                     document.getElementById('imagePreview').classList.add('hidden');
+                    document.getElementById('nguoiGhi').innerHTML = '<option value="">-- Vui lòng chọn nhóm trước --</option>';
+                    document.getElementById('nguoiGhi').disabled = true;
                     base64Image = ""; btn.disabled = false; 
                     btn.innerText = "🚀 GỬI PHIẾU KHẢO SÁT";
                     btn.classList.replace('bg-green-600', 'bg-blue-600');
